@@ -10,4 +10,5 @@ public class SpangEatsApplication {
         SpringApplication.run(SpangEatsApplication.class, args);
     }
 
+
 }
