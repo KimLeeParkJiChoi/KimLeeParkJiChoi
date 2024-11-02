@@ -20,7 +20,7 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
 
-    // 필터 구현 이후 userId - > member 로 수정해야함
+    // 필터 구현 이후 memberId - > member 로 수정해야함
     public void saveReview(Long memberId, Long orderId, @Valid ReviewRequestDto requestDto) {
         reviewRepository.save(new Review(memberId, orderId, requestDto.star(), requestDto.contents()));
     }
