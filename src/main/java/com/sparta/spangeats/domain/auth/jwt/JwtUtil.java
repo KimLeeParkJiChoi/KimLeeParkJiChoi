@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.security.SignatureException;
 import java.util.Base64;
 import java.util.Date;
 
@@ -19,7 +18,6 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String AUTHORIZAION_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
     private static final Long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
@@ -59,8 +57,8 @@ public class JwtUtil {
         try{
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException | SignatureException) {
-            log.error("Invalid JWT signature, 유효하지 ㅇ낳은 JWT 서명입니다.");
+        } catch (SecurityException | MalformedJwtException | SignatureException e) {
+            log.error("Invalid JWT signature, 유효하지 않은 JWT 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT 토큰입니다.");
         } catch (UnsupportedJwtException e) {
