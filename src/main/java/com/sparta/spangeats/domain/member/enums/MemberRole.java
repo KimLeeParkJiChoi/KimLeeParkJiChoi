@@ -5,10 +5,10 @@ import java.util.Arrays;
 public enum MemberRole {
     USER, OWNER;
 
-    public static MemberRole of(String role) {
+    public static MemberRole of(String memberrole) {
         return Arrays.stream(MemberRole.values())
-                .filter(r -> r.name().equalsIgnoreCase(role))
+                .filter(r -> r.name().equalsIgnoreCase(memberrole))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 MemberRole : " + role));
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 MemberRole : " + memberrole));
     }
 }

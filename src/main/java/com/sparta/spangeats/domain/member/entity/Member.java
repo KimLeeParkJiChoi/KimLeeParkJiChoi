@@ -19,7 +19,7 @@ public class Member extends Timestamped {
     @Column
     private String nickname;
     @Enumerated(EnumType.STRING)
-    private MemberRole role;
+    private MemberRole memberRole;
     @Column
     private String phoneNumber;
 
@@ -27,7 +27,7 @@ public class Member extends Timestamped {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.role = role;
+        this.memberRole = role;
         this.phoneNumber = phoneNumber;
     }
 }
