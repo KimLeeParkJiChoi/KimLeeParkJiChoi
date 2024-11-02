@@ -1,4 +1,4 @@
-package com.sparta.spangeats.domain.auth.jwt;
+package com.sparta.spangeats.security;
 
 import com.sparta.spangeats.domain.member.enums.MemberRole;
 import io.jsonwebtoken.*;
