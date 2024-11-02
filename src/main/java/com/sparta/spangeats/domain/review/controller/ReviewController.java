@@ -3,9 +3,9 @@ package com.sparta.spangeats.domain.review.controller;
 import com.sparta.spangeats.domain.review.dto.ReviewRequestDto;
 import com.sparta.spangeats.domain.review.dto.ReviewResponseDte;
 import com.sparta.spangeats.domain.review.service.ReviewService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,15 +36,15 @@ public class ReviewController {
 
     //리뷰 전체 조회(회원별) - 날짜순, 디폴트: 최신
     @GetMapping("/get/member/{memberId}")
-    public ResponseEntity<List<ReviewResponseDte>> getAllForMember(
+    public ResponseEntity<Page<ReviewResponseDte>> getAllForMember(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "sortBy",defaultValue = "modifiedAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
             @PathVariable Long memberId) {
 //        Long memberId = request.getAttribute(member).getMemberId;
-        reviewService.getAllForMember(page, size, sortBy, isAsc, memberId);
-        return null;
+        Page<ReviewResponseDte> reviews = reviewService.getAllForMember(page, size, sortBy, isAsc, memberId);
+        return ResponseEntity.ok(reviews);
     }
 
     //리뷰 수정. 리뷰 전체 조회(회원별) 리턴값으로 리턴
