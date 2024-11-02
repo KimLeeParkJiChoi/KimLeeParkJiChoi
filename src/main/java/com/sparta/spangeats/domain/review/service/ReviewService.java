@@ -2,16 +2,21 @@ package com.sparta.spangeats.domain.review.service;
 
 import com.sparta.spangeats.domain.review.dto.ReviewRequestDto;
 import com.sparta.spangeats.domain.review.dto.ReviewResponseDte;
+import com.sparta.spangeats.domain.review.repository.ReviewRepository;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewService {
 
+    private final ReviewRepository reviewRepository;
 
-    public void saveReview(String username, Long orderID, @Valid ReviewRequestDto requestDto) {
+
+    public void saveReview(String username, Long orderId, @Valid ReviewRequestDto requestDto) {
 
     }
 

@@ -21,9 +21,9 @@ public class ReviewController {
 
     // 리뷰 생성 , 리뷰 조회(가게) 리턴값으로 리턴
     @PostMapping("/save/param")
-    public ResponseEntity<List<ReviewResponseDte>> saveComment(@RequestParam String username, Long orderID,
+    public ResponseEntity<List<ReviewResponseDte>> saveComment(@RequestParam String username, Long orderId,
                                                                @Valid @RequestBody ReviewRequestDto requestDto) {
-        reviewService.saveReview(username, orderID, requestDto);
+        reviewService.saveReview(username, orderId, requestDto);
         return null;
     }
 
