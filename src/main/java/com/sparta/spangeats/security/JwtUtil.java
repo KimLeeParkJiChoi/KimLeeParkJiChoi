@@ -17,9 +17,10 @@ import java.util.Date;
 @Slf4j(topic = "JwtUtil")
 @Component
 public class JwtUtil {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
-    private static final Long TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String AUTHORIZATION_KEY = "auth";
+    public static final String BEARER_PREFIX = "Bearer ";
+    private final long TOKEN_TIME = 60 * 60 * 1000L; // 60분
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -32,15 +33,15 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(Long memberId, String email, MemberRole memberRole) {
+    public String createToken(String email, MemberRole role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(String.valueOf(memberId))
-                        .claim("email", email)
-                        .claim("memberRole", memberRole)
-                        .setExpiration(date)
+                        .setSubject(email) // 사용자 식별값
+                        .claim(AUTHORIZATION_KEY, role) // 사용자 권한
+                        .setExpiration(new Date(date.getTime() + TOKEN_TIME)) // 만료 시간
+                        .setIssuedAt(date) // 발급일
                         .signWith(key, signatureAlgorithm)
                         .compact();
     }
