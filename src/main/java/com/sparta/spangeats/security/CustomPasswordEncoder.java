@@ -2,7 +2,7 @@ package com.sparta.spangeats.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-public class PasswordEncoder {
+public class CustomPasswordEncoder {
 
     public String encode(String rawPassword) {
         return BCrypt.withDefaults().hashToString(BCrypt.MIN_COST, rawPassword.toCharArray());
