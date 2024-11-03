@@ -1,6 +1,6 @@
 package com.sparta.spangeats.security.filter;
 
-import com.sparta.spangeats.security.JwtUtil;
+import com.sparta.spangeats.security.config.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -49,14 +49,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            filterChain.doFilter(request, response);
         }
+        filterChain.doFilter(request, response);
     }
 
     // 인증 처리
     private void setAuthentication(String email) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = createAuthentication(email);
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
     }
 
     // 인증 객체 생성

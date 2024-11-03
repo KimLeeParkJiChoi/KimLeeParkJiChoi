@@ -1,4 +1,4 @@
 package com.sparta.spangeats.domain.auth.dto.response;
 
-public class LoginResponseDto {
+public record LoginResponseDto(String bearerToken) {
 }

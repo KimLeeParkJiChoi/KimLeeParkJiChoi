@@ -7,7 +7,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum MemberRole {
     USER(Authority.USER),
-    ONWER(Authority.OWNER);
+    OWNER(Authority.OWNER);
 
     private final String authority;
 

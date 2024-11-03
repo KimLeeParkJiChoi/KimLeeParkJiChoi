@@ -1,7 +1,5 @@
 package com.sparta.spangeats.security.config;
 
-import com.sparta.spangeats.security.CustomPasswordEncoder;
-import com.sparta.spangeats.security.JwtUtil;
 import com.sparta.spangeats.security.filter.JwtAuthenticationFilter;
 import com.sparta.spangeats.security.filter.JwtAuthorizationFilter;
 import com.sparta.spangeats.security.filter.UserDetailsServiceImpl;
@@ -14,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -52,7 +49,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         // csrf 해제
-//        http.csrf((csrf) -> csrf.disable());
+        http.csrf((csrf) -> csrf.disable());
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
@@ -67,8 +64,8 @@ public class WebSecurityConfig {
         );
 
         // 필터 관리
-        http.addFilterBefore(jwtAuthenticationFilter(), JwtAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

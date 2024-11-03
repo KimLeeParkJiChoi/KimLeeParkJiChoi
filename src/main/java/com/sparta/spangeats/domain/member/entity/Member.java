@@ -13,14 +13,20 @@ import lombok.NoArgsConstructor;
 public class Member extends Timestamped {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String password;
-    @Column
+
+    @Column(nullable = false, unique = true)
     private String nickname;
+
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
-    @Column
+
+    @Column(nullable = false)
     private String phoneNumber;
 
     public Member(String email, String password, String nickname, MemberRole role, String phoneNumber) {

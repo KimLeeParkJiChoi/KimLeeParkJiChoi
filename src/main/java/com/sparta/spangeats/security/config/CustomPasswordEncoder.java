@@ -1,4 +1,4 @@
-package com.sparta.spangeats.security;
+package com.sparta.spangeats.security.config;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 

@@ -3,7 +3,7 @@ package com.sparta.spangeats.security.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.spangeats.domain.auth.dto.request.LoginRequestDto;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
-import com.sparta.spangeats.security.JwtUtil;
+import com.sparta.spangeats.security.config.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -58,9 +58,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    protected  void unsuccessfulAuthentication(HttpServletRequest request,
-                                               HttpServletResponse response,
-                                               AuthenticationException failed) {
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 
