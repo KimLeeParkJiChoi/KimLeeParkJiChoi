@@ -2,11 +2,14 @@ package com.sparta.spangeats.domain.member.entity;
 
 import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
+import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @Table(name = "member")
@@ -28,6 +31,9 @@ public class Member extends Timestamped {
 
     @Column(nullable = false)
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private MemberStatus memberStatus = MemberStatus.ACTIVE;
 
     public Member(String email, String password, String nickname, MemberRole role, String phoneNumber) {
         this.email = email;

@@ -50,7 +50,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication authResult) {
-        String email = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
+        String email = ((UserDetailsImpl) authResult.getPrincipal()).getEmail();
         MemberRole role = ((UserDetailsImpl) authResult.getPrincipal()).getMember().getMemberRole();
 
         String token = jwtUtil.createToken(email, role);

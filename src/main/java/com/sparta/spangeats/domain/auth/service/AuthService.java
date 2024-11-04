@@ -6,9 +6,12 @@ import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.exception.AuthException;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
+import com.sparta.spangeats.domain.member.enums.MemberStatus;
+import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
 import com.sparta.spangeats.security.config.CustomPasswordEncoder;
 import com.sparta.spangeats.security.config.JwtUtil;
+import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +30,7 @@ public class AuthService {
     @Transactional
     public void signup(SignupRequestDto requestDto) {
         if (memberRepository.existsByEmail(requestDto.email())) {
-            throw new AuthException("이미 존재하는 이메일 입니다.");
+            throw new AuthException("이미 존재하는 이메일, 또는 회원 탈퇴한 이메일입니다.");
         }
 
         if (memberRepository.existsByNickname(requestDto.nickname())) {
@@ -43,7 +46,8 @@ public class AuthService {
                 encodedPassword,
                 requestDto.nickname(),
                 memberRole,
-                requestDto.phoneNumber());
+                requestDto.phoneNumber()
+        );
         memberRepository.save(member);
     }
 

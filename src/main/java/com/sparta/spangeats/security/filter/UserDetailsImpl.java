@@ -2,6 +2,7 @@ package com.sparta.spangeats.security.filter;
 
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
+import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +20,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getNickname();
+        return member.getEmail();
     }
 
     @Override
@@ -41,6 +42,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public MemberRole getMemberRole() {
         return member.getMemberRole();
+    }
+
+    public MemberStatus getMemberStatus() {
+        return member.getMemberStatus();
     }
 
     @Override
