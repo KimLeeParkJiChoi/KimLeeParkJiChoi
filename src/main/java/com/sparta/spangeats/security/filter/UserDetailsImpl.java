@@ -19,12 +19,28 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getEmail();
+        return member.getNickname();
     }
 
     @Override
     public String getPassword() {
         return member.getPassword();
+    }
+
+    public Long getMemberId() {
+        return member.getId();
+    }
+
+    public String getEmail() {
+        return member.getEmail();
+    }
+
+    public String getPhoneNumber() {
+        return member.getPhoneNumber();
+    }
+
+    public MemberRole getMemberRole() {
+        return member.getMemberRole();
     }
 
     @Override
