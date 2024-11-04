@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/auth/signup")
+    @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto) {
         authService.signup(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body("회원 가입이 완료되었습니다!");
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> signup(@RequestBody LoginRequestDto requestDto) {
         AuthResponseDto bearerJwt = authService.login(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(bearerJwt);
