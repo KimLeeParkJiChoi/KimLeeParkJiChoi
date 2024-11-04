@@ -45,12 +45,12 @@ public class Store extends Timestamped {
     @Column
     private String address;
 
-    @OneToMany(mappedBy = "store") // Store와 Menu의 연관관계
-    private List<Menu> menus = new ArrayList<>();
+    //@OneToMany(mappedBy = "store") // Store와 Menu의 연관관계
+    //private List<Menu> menus = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "store") // Store와 Order의 연관관계
-    private List<Order> orders = new ArrayList<>();
+    //@OneToMany(mappedBy = "store") // Store와 Order의 연관관계
+    //private List<Order> orders = new ArrayList<>();
 
 
     // 멤버변수 생성자
