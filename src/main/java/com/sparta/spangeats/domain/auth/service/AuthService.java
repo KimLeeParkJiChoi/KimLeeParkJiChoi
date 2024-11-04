@@ -48,7 +48,6 @@ public class AuthService {
                 memberRole,
                 requestDto.phoneNumber()
         );
-//        member.setMemberStatus(MemberStatus.ACTIVE);
         memberRepository.save(member);
     }
 
