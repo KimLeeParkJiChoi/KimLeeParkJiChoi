@@ -37,7 +37,7 @@ public class ReviewController {
     }
 
     //리뷰 전체 조회(회원별) - 날짜순, 디폴트: 최신
-    @GetMapping("/get/review/member")
+    /*@GetMapping("/get/review/member")
     public ResponseEntity<Page<ReviewResponse>> getAllForMember(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -47,7 +47,7 @@ public class ReviewController {
         Long memberId = userDetails.getMemberId();
         Page<ReviewResponse> reviews = reviewService.getAllForMember(page, size, sortBy, isAsc, memberId);
         return ResponseEntity.ok(reviews);
-    }
+    }*/
 
     @PatchMapping("/update/{reviewId}")
     public ResponseEntity<String> update(@PathVariable Long reviewId,

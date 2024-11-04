@@ -18,9 +18,9 @@ public class Review extends Timestamped {
     private Long score;
     private String contents;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    // @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "member_id", nullable = false)
+    //private Member member;
 
 //    @OneToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "todo_id", nullable = false)

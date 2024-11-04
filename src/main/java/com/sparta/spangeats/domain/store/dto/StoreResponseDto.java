@@ -6,7 +6,8 @@ import java.time.LocalTime;
 
 public record StoreResponseDto(
         Long id,
-        String name,
+        String memberId,
+        Long name,
         LocalTime openTime,
         LocalTime closeTime,
         Long minOrderPrice,

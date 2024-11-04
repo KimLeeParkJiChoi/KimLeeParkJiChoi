@@ -36,4 +36,8 @@ public class Member extends Timestamped {
         this.memberRole = role;
         this.phoneNumber = phoneNumber;
     }
+
+    public MemberRole getRole() {
+        return memberRole;
+    }
 }
