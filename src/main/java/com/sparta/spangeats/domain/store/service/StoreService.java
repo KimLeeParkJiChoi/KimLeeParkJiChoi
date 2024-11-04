@@ -29,7 +29,7 @@ public class StoreService {
         }
         // 사장님이 가진 가게 수 확인 (open상태인 가게만 포함)
         Long memberId = member.getId();
-        long storeCount = storeRepository.countByMemberId(memberId, StoreStatus.OPEN);
+        long storeCount = storeRepository.countByMemberIdAndStatus(memberId, StoreStatus.OPEN);
         if (storeCount >= 3) {
             throw new StoreException("사장님은 최대 3개의 가게를 오픈할 수 있습니다.");
         }

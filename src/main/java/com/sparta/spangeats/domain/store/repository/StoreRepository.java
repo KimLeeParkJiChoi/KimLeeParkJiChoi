@@ -8,5 +8,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     boolean existsByName(String name);
 
-    long countByMemberId(Long memberId, StoreStatus status);
+    long countByMemberIdAndStatus(Long memberId, StoreStatus status);
 }
