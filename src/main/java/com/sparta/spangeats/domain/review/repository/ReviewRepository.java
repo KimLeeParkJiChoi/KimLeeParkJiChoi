@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    Page<Review> findAllByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
+    //Page<Review> findAllByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
 }
