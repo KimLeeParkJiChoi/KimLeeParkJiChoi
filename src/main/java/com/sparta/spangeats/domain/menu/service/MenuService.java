@@ -4,11 +4,10 @@ import com.sparta.spangeats.domain.menu.dto.request.MenuRequestDto;
 import com.sparta.spangeats.domain.menu.dto.response.MenuResponseDto;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.menu.entity.MenuStatus;
-import com.sparta.spangeats.domain.menu.exception.InvalidMenuAccessException;
-import com.sparta.spangeats.domain.menu.exception.InvalidMenuDataException;
-import com.sparta.spangeats.domain.menu.exception.MenuAlreadyExistsException;
-import com.sparta.spangeats.domain.menu.exception.MenuNotFoundException;
+import com.sparta.spangeats.domain.menu.exception.*;
 import com.sparta.spangeats.domain.menu.repository.MenuRepository;
+import com.sparta.spangeats.domain.store.entity.Store;
+import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +19,20 @@ import java.util.stream.Collectors;
 public class MenuService {
 
     private final MenuRepository menuRepository;
+    private final StoreRepository storeRepository;
 
     @Autowired
-    public MenuService(MenuRepository menuRepository) {
+    public MenuService(MenuRepository menuRepository, StoreRepository storeRepository) {
         this.menuRepository = menuRepository;
+        this.storeRepository = storeRepository;
     }
+
 
     // 메뉴 생성
     public MenuResponseDto createMenu(Long storeId, MenuRequestDto requestDto) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreNotFoundException(storeId));
+
         if (requestDto.name() == null || requestDto.price() == null) {
             throw new InvalidMenuDataException();
         }
@@ -36,14 +41,16 @@ public class MenuService {
             throw new MenuAlreadyExistsException(requestDto.name());
         }
 
+
         Menu menu = new Menu(
                 null,
-                requestDto.storeId(),
+                store,
                 requestDto.name(),
                 requestDto.price(),
                 MenuStatus.ACTIVE,
                 LocalDateTime.now(),
                 LocalDateTime.now()
+
         );
 
         Menu savedMenu = menuRepository.save(menu);
@@ -54,7 +61,7 @@ public class MenuService {
     public MenuResponseDto updateMenu(Long storeId, Long menuId, MenuRequestDto requestDto) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(MenuNotFoundException::new);
 
-        if (!menu.storeId().equals(storeId)) {
+        if (!menu.store().getId().equals(storeId)) {
             throw new InvalidMenuAccessException();
         }
 
@@ -64,7 +71,7 @@ public class MenuService {
 
         menu = new Menu(
                 menu.id(),
-                menu.storeId(),
+                menu.store(),
                 requestDto.name(),
                 requestDto.price(),
                 MenuStatus.ACTIVE, // 상태 ACTIVE 설정
@@ -80,13 +87,13 @@ public class MenuService {
     public void deleteMenu(Long storeId, Long menuId) {
         Menu menu = menuRepository.findById(menuId).orElseThrow(MenuNotFoundException::new);
 
-        if (!menu.storeId().equals(storeId)) {
+        if (!menu.store().getId().equals(storeId)) {
             throw new InvalidMenuAccessException();
         }
 
         menu = new Menu(
                 menu.id(),
-                menu.storeId(),
+                menu.store(),
                 menu.name(),
                 menu.price(),
                 MenuStatus.DELETED,
