@@ -4,6 +4,7 @@ import com.sparta.spangeats.domain.auth.dto.request.LoginRequestDto;
 import com.sparta.spangeats.domain.auth.dto.request.SignupRequestDto;
 import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.service.AuthService;
+import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

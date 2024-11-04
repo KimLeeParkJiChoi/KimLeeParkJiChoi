@@ -19,7 +19,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return member.getNickname();
+        return member.getEmail();
     }
 
     @Override
@@ -41,6 +41,10 @@ public class UserDetailsImpl implements UserDetails {
 
     public MemberRole getMemberRole() {
         return member.getMemberRole();
+    }
+
+    public MemberStatus getMemberStatus() {
+        return member.getMemberStatus();
     }
 
     @Override
