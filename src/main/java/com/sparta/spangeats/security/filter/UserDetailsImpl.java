@@ -2,6 +2,7 @@ package com.sparta.spangeats.security.filter;
 
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
+import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
