@@ -2,18 +2,15 @@ package com.sparta.spangeats.domain.store.entity;
 
 import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.store.dto.StoreRequestDto;
-import com.sparta.spangeats.domain.store.dto.StoreResponseDto;
 import com.sparta.spangeats.domain.store.enums.StoreStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.Hibernate;
 
-
-import java.awt.*;
 import java.time.LocalTime;
-import java.util.ArrayList;
+
 
 @Getter
 @Entity
@@ -70,18 +67,7 @@ public class Store extends Timestamped {
         this.member = member;
     }
 
-   //폐업 상태 메서드
-    public void closeStore() {
-        this.status = StoreStatus.CLOSED;
-    }
-
-    // 가게 생성시, requestDto -> 엔터티
-    public static Store from(StoreRequestDto requestDto, Member member) {
-        Store store = new Store();
-        store.initData(requestDto);
-        store.setMember(member); // 가게 소유자로 Member 설정
-        return store;
-    }
+    // Store 객체 초기화 메서드
     public void initData(StoreRequestDto requestDto) {
         this.name = requestDto.name();
         this.openTime = requestDto.openTime();
@@ -96,6 +82,7 @@ public class Store extends Timestamped {
         this.member = member;
     }
 
+
     // 가게정보 수정시, 수정된 requestDto -> 엔터티 (status 기본값 유지)
     public void updateData(StoreRequestDto requestDto) {
         this.name = requestDto.name();
@@ -106,23 +93,11 @@ public class Store extends Timestamped {
         this.address = requestDto.address();
     }
 
-    // 엔터티 -> responseDto 변환 메서드
-    public StoreResponseDto to() {
-        return new StoreResponseDto(
-                id,
-                name,
-                member.getId(),
-                openTime,
-                closeTime,
-                minOrderPrice,
-                phoneNumber,
-                address,
-                status,
-                getCreatedAt(),
-                getUpdatedAt()
-        );
+    //폐업 상태 메서드
+    public void closeStore() {
+        this.status = StoreStatus.CLOSED;
     }
-
-
-
 }
+
+
+
