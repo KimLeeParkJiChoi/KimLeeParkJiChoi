@@ -55,17 +55,6 @@ public class Store extends Timestamped {
     private Member member;
 
 
-    //변수 메서드
-    public Store(String name, LocalTime openTime, LocalTime closeTime, Long minOrderPrice, String phoneNumber, String address, Member member) {
-        this.name = name;
-        this.openTime = openTime;
-        this.closeTime = closeTime;
-        this.minOrderPrice = minOrderPrice;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
-        this.member = member;
-    }
-
     // Store 객체 초기화 메서드
     public void initData(StoreRequestDto requestDto) {
         this.name = requestDto.name();

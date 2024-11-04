@@ -4,6 +4,7 @@ import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.store.dto.StoreRequestDto;
 import com.sparta.spangeats.domain.store.dto.StoreResponseDto;
 import com.sparta.spangeats.domain.store.entity.Store;
+import com.sparta.spangeats.domain.store.enums.StoreStatus;
 import com.sparta.spangeats.domain.store.exception.StoreException;
 import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
@@ -26,9 +27,9 @@ public class StoreService {
         if (!member.isValidMemberRole()) {
             throw new StoreException("사장님 권한이 필요합니다.");
         }
-        // 사장님이 가진 가게 수 확인
+        // 사장님이 가진 가게 수 확인 (open상태인 가게만 포함)
         Long memberId = member.getId();
-        long storeCount = storeRepository.countByMemberId(memberId);
+        long storeCount = storeRepository.countByMemberId(memberId, StoreStatus.OPEN);
         if (storeCount >= 3) {
             throw new StoreException("사장님은 최대 3개의 가게를 오픈할 수 있습니다.");
         }
@@ -47,5 +48,34 @@ public class StoreService {
         // StoreResponseDto로 변환하여 반환
         return StoreResponseDto.from(store);
     }
+    // 2. 가게 수정 메소드
+    @Transactional
+    public StoreResponseDto updateStore(Long storeId, StoreRequestDto storeRequestDto, Member member) {
+        // 사장님 권한 확인
+        if (!member.isValidMemberRole()) {
+            throw new StoreException("사장님 권한이 필요합니다.");
+        }
+        // Store 조회
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreException("해당 가게를 찾을 수 없습니다."));
 
+        // Store 정보 업데이트 (변경된 엔티티를 StoreResponseDto로 변환하여 반환)
+        store.updateData(storeRequestDto);
+        return StoreResponseDto.from(store);
+    }
+
+    //3. 가게 삭제 메소드
+    @Transactional
+    public void softDeleteStore(Long storeId, Member member) {
+        // 사장님 권한 확인
+        if (!member.isValidMemberRole()) {
+            throw new StoreException("사장님 권한이 필요합니다.");
+        }
+        // Store 조회
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreException("해당 가게를 찾을 수 없습니다."));
+        // 가게 상태를 CLOSED로 변경하여 저장
+        store.closeStore();
+        storeRepository.save(store);
+    }
 }

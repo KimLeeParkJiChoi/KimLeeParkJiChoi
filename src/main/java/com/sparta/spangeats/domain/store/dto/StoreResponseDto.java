@@ -17,7 +17,8 @@ public record StoreResponseDto(
         StoreStatus status, // 상태 (OPEN 또는 CLOSED)
         LocalDateTime createdAt,
         LocalDateTime updatedAt
-) { // Store 엔터티 -> StoreResponseDto 변환 메서드
+) {
+    // Store 엔터티 -> StoreResponseDto 변환 메서드
     public static StoreResponseDto from(Store store) {
         return new StoreResponseDto(
                 store.getId(),
@@ -32,4 +33,5 @@ public record StoreResponseDto(
                 store.getCreatedAt(),
                 store.getUpdatedAt()
         );
-    }}
+    }
+}
