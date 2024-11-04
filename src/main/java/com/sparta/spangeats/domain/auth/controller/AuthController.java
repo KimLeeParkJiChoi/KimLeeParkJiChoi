@@ -23,9 +23,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<AuthResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
-        AuthResponseDto bearerJwt = authService.signup(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(bearerJwt);
+    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+        authService.signup(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원 가입이 완료되었습니다!");
     }
 
     @PostMapping("/auth/login")

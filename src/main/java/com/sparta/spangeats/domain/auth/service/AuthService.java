@@ -25,7 +25,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public AuthResponseDto signup(SignupRequestDto requestDto) {
+    public void signup(SignupRequestDto requestDto) {
         if (memberRepository.existsByEmail(requestDto.email())) {
             throw new AuthException("이미 존재하는 이메일 입니다.");
         }
@@ -45,10 +45,6 @@ public class AuthService {
                 memberRole,
                 requestDto.phoneNumber());
         memberRepository.save(member);
-
-        String bearerToken = jwtUtil.createToken(member.getEmail(), member.getMemberRole());
-
-        return new AuthResponseDto(bearerToken);
     }
 
     public AuthResponseDto login(LoginRequestDto requestDto) {
