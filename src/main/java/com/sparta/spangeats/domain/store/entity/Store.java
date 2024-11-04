@@ -2,7 +2,6 @@ package com.sparta.spangeats.domain.store.entity;
 
 import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.member.entity.Member;
-import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.store.dto.StoreRequestDto;
 import com.sparta.spangeats.domain.store.enums.StoreStatus;
 import jakarta.persistence.*;
