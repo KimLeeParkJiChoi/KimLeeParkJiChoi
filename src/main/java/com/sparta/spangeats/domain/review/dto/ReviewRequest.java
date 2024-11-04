@@ -4,8 +4,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
-public record ReviewRequestDto(
-        @NotBlank @Max(5) @Min(1) Long star,
+public record ReviewRequest(
+        @NotBlank @Max(5) @Min(1) Long score,
         String contents
 ) {
 }

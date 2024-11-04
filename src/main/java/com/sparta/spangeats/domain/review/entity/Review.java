@@ -15,7 +15,7 @@ public class Review extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long star;
+    private Long score;
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,15 +28,15 @@ public class Review extends Timestamped {
 
 //    private Long memberId;
 
-    public Review(Long memberId, Long orderId, Long star, String contents) {
+    public Review(Long memberId, Long orderId, Long score, String contents) {
 //        this.memberId = memberId;
         this.orderId = orderId;
-        this.star = star;
+        this.score = score;
         this.contents = contents;
     }
 
     public void update(Long star, String contents) {
-        this.star = star;
+        this.score = star;
         this.contents = contents;
     }
 }
