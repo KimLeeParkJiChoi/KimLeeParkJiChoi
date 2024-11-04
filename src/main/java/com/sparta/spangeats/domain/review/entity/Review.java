@@ -26,10 +26,10 @@ public class Review extends Timestamped {
 //    @JoinColumn(name = "todo_id", nullable = false)
     private Long orderId;
 
-    private Long memberId;
+//    private Long memberId;
 
     public Review(Long memberId, Long orderId, Long star, String contents) {
-        this.memberId = memberId;
+//        this.memberId = memberId;
         this.orderId = orderId;
         this.star = star;
         this.contents = contents;

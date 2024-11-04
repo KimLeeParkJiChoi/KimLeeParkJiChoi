@@ -1,6 +1,8 @@
 package com.sparta.spangeats.domain.auth.controller;
 
+import com.sparta.spangeats.domain.auth.dto.request.LoginRequestDto;
 import com.sparta.spangeats.domain.auth.dto.request.SignupRequestDto;
+import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto) {
-        log.info("회원가입 요청 시작: " + requestDto);
-        String bearerJwt = String.valueOf(authService.signup(requestDto));
-        log.info("회원가입 완료");
-        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 완료! \n Bearer JWT : " + bearerJwt);
+    public ResponseEntity<AuthResponseDto> signup(@Valid @RequestBody SignupRequestDto requestDto) {
+        AuthResponseDto bearerJwt = authService.signup(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bearerJwt);
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<AuthResponseDto> signup(@RequestBody LoginRequestDto requestDto) {
+        AuthResponseDto bearerJwt = authService.login(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(bearerJwt);
     }
 
 }

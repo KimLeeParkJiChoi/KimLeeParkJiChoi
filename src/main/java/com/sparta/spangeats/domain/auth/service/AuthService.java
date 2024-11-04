@@ -1,13 +1,15 @@
 package com.sparta.spangeats.domain.auth.service;
 
+import com.sparta.spangeats.domain.auth.dto.request.LoginRequestDto;
 import com.sparta.spangeats.domain.auth.dto.request.SignupRequestDto;
-import com.sparta.spangeats.domain.auth.dto.response.LoginResponseDto;
+import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.exception.AuthException;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
 import com.sparta.spangeats.security.config.CustomPasswordEncoder;
 import com.sparta.spangeats.security.config.JwtUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public LoginResponseDto signup(SignupRequestDto requestDto) {
+    public AuthResponseDto signup(SignupRequestDto requestDto) {
         if (memberRepository.existsByEmail(requestDto.email())) {
             throw new AuthException("이미 존재하는 이메일 입니다.");
         }
@@ -46,7 +48,19 @@ public class AuthService {
 
         String bearerToken = jwtUtil.createToken(member.getEmail(), member.getMemberRole());
 
-        return new LoginResponseDto(bearerToken);
+        return new AuthResponseDto(bearerToken);
     }
 
+    public AuthResponseDto login(LoginRequestDto requestDto) {
+        Member member = memberRepository.findByEmail(requestDto.email())
+                .orElseThrow(() -> new AuthException("가입되지 않은 유저입니다."));
+
+        if (!passwordEncoder.matches(requestDto.password(), member.getPassword())) {
+            throw new AuthException("잘못된 비밀번호입니다.");
+        }
+
+        String bearerToken = jwtUtil.createToken(member.getEmail(), member.getMemberRole());
+
+        return new AuthResponseDto(bearerToken);
+    }
 }
