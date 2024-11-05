@@ -19,3 +19,6 @@ jwt:
   secret:
     key: ${jwt.secret.key}
 
+admin:
+  secret:
+    key: H67G8JkLqTz93PdC0VmXNQw58B9dUe4S

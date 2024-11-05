@@ -1,5 +1,6 @@
 package com.sparta.spangeats.security.filter;
 
+import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.security.config.JwtUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -37,21 +38,43 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰입니다.");
                 return;
             }
 
             Claims info = jwtUtil.getMemberInfoFromToken(tokenValue);
 
+            // ADMIN 권한이 필요한 경우 권한 검증
+            if (requiresAdminRole(request) && !isAdmin(info)) {
+                log.error("접근 권한이 없습니다.");
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");
+                return;
+            }
+
             try {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
                 log.error(e.getMessage());
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "인증 설정 오류");
                 return;
             }
 
         }
         filterChain.doFilter(request, response);
     }
+
+    // ADMIN 권한 검증 메서드
+    private boolean isAdmin(Claims info) {
+        String role = info.get("auth", String.class);
+        return MemberRole.ADMIN.name().equals(role);
+    }
+
+    // 특정 요청이 ADMIN 권한이 필요한지 확인하는 메서드
+    private boolean requiresAdminRole(HttpServletRequest request) {
+        String uri = request.getRequestURI();
+        return uri.startsWith("/api/admin");
+    }
+
 
     // 인증 처리
     private void setAuthentication(String email) {

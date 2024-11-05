@@ -23,6 +23,8 @@ public record SignupRequestDto(
         String memberRole,
 
         @NotBlank
-        String phoneNumber
+        String phoneNumber,
+
+        String adminSecretKey
 ) {
 }

@@ -2,16 +2,23 @@ package com.sparta.spangeats.domain.member.service;
 
 import com.sparta.spangeats.domain.member.dto.request.SignoutRequestDto;
 import com.sparta.spangeats.domain.member.dto.request.UpdateMemberRequestDto;
+import com.sparta.spangeats.domain.member.dto.response.AdminMemberInfoResponse;
 import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
 import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
 import com.sparta.spangeats.security.config.CustomPasswordEncoder;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +59,22 @@ public class MemberService {
         );
     }
 
+    public List<AdminMemberInfoResponse> getAllMemberInfo(UserDetailsImpl userDetails, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return memberRepository.findAll(pageable).stream()
+                .map(member -> new AdminMemberInfoResponse(
+                        member.getEmail(),
+                        member.getPassword(),
+                        member.getNickname(),
+                        member.getPhoneNumber(),
+                        member.getMemberRole(),
+                        member.getMemberStatus(),
+                        member.getCreatedAt(),
+                        member.getUpdatedAt()
+                ))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void updateMemberInfo(UpdateMemberRequestDto requestDto, UserDetailsImpl userDetails) {
 
@@ -61,7 +84,7 @@ public class MemberService {
 
         Member member = userDetails.getMember();
 
-        if(!member.isValidNickName(requestDto.nickname(), userDetails.getNickname())) {
+        if (!member.isValidNickName(requestDto.nickname(), userDetails.getNickname())) {
             throw new MemberException("이미 사용 중인 닉네임입니다.");
         }
 
@@ -70,7 +93,7 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    private void setMemberFields (UpdateMemberRequestDto requestDto, Member member) {
+    private void setMemberFields(UpdateMemberRequestDto requestDto, Member member) {
         if (requestDto.nickname() != null) {
             member.setNickname(requestDto.nickname());
         }
