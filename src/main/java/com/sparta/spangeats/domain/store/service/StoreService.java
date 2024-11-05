@@ -1,6 +1,7 @@
 package com.sparta.spangeats.domain.store.service;
 
 import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.store.dto.StoreIdSearchDto;
 import com.sparta.spangeats.domain.store.dto.StoreRequestDto;
 import com.sparta.spangeats.domain.store.dto.StoreResponseDto;
 import com.sparta.spangeats.domain.store.dto.StoreSearchDto;
@@ -107,5 +108,22 @@ public class StoreService {
                 .collect(Collectors.toList());
 
         return filteredStores;
+    }
+
+    //5. 가게 단권 조회 메서드
+    public StoreIdSearchDto getStoreById(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreException("존재하지 않는 가게입니다."));
+
+        // 가게 상태가 CLOSED인 경우 예외 처리
+        if (store.getStatus() == StoreStatus.CLOSED) {
+            throw new StoreException("존재하지 않는 가게입니다.");
+        }
+        // 등록된 메뉴가 없는 경우 예외 처리
+        if (store.getMenus() == null || store.getMenus().isEmpty()) {
+            throw new StoreException("등록된 메뉴가 없습니다.");
+        }
+        // StoreIdSearchDto로 변환하여 반환
+        return StoreIdSearchDto.from(store);
     }
 }
