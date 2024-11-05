@@ -71,6 +71,22 @@ public class Store extends Timestamped {
         this.member = member;
     }
 
+    // 가게 생성시, requestDto -> 엔터티
+    public static Store from(StoreRequestDto requestDto) {
+        Store store = new Store();
+        store.initData(requestDto);
+        return store;
+    }
+
+
+    public void initData(StoreRequestDto requestDto) {
+        this.name = requestDto.name();
+        this.openTime = requestDto.openTime();
+        this.closeTime = requestDto.closeTime();
+        this.minOrderPrice = requestDto.minOrderPrice();
+        this.phoneNumber = requestDto.phoneNumber();
+        this.address = requestDto.address();
+    }
 
     // 가게정보 수정시, 수정된 requestDto -> 엔터티 (status 기본값 유지)
     public void updateData(StoreRequestDto requestDto) {
