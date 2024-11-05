@@ -48,6 +48,10 @@ public class UserDetailsImpl implements UserDetails {
         return member.getMemberStatus();
     }
 
+    public String getNickname() {
+        return member.getNickname();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         MemberRole memberRole = member.getMemberRole();

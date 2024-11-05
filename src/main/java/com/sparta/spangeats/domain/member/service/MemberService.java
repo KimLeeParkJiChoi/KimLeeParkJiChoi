@@ -1,10 +1,7 @@
 package com.sparta.spangeats.domain.member.service;
 
-import com.sparta.spangeats.domain.auth.dto.request.LoginRequestDto;
-import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
-import com.sparta.spangeats.domain.auth.exception.AuthException;
-import com.sparta.spangeats.domain.member.dto.SignoutRequestDto;
-import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.dto.request.SignoutRequestDto;
+import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
 import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
@@ -35,5 +32,19 @@ public class MemberService {
 
         userDetails.getMember().setMemberStatus(MemberStatus.DELETED);
         memberRepository.save(userDetails.getMember());
+    }
+
+    public MemberInfoResponseDto getMemberInfo(UserDetailsImpl userDetails) {
+
+        if (userDetails.getMember().getMemberStatus().equals(MemberStatus.DELETED)) {
+            throw new MemberException("이미 탈퇴한 사용자입니다.");
+        }
+
+        return new MemberInfoResponseDto(
+                userDetails.getEmail(),
+                userDetails.getNickname(),
+                userDetails.getPhoneNumber(),
+                userDetails.getMemberRole()
+        );
     }
 }
