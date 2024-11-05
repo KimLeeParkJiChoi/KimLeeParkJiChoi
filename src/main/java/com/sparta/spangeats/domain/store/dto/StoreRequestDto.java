@@ -1,6 +1,7 @@
 package com.sparta.spangeats.domain.store.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalTime;
@@ -10,13 +11,13 @@ public record StoreRequestDto(
         @Size(min = 1, max = 50, message = "가게 이름은 1자 이상 50자 이하로 입력해야 합니다.")
         String name,
 
-        @NotBlank(message = "오픈 시간은 필수입니다.")
+        @NotNull(message = "오픈 시간은 필수입니다.")
         LocalTime openTime,
 
-        @NotBlank(message = "마감 시간은 필수입니다.")
+        @NotNull(message = "마감 시간은 필수입니다.")
         LocalTime closeTime,
 
-        @NotBlank(message = "최소 주문 가격은 필수입니다.")
+        @NotNull(message = "최소 금액은 필수입니다.")
         Long minOrderPrice,
 
         @NotBlank(message = "전화번호는 필수입니다.")

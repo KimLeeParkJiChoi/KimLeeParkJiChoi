@@ -23,7 +23,7 @@ public class StoreController {
     private final StoreService storeService;
 
     //1. 가게 생성
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Object> createStore(@Valid @RequestBody StoreRequestDto storeRequestDto,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
@@ -55,7 +55,7 @@ public class StoreController {
     }
 
     // 3. 가게 삭제 (softdelete)
-    @DeleteMapping("/{storeId}")
+    @PatchMapping("/{storeId}")
     public ResponseEntity<Object> softDeleteStore(@PathVariable Long storeId,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
