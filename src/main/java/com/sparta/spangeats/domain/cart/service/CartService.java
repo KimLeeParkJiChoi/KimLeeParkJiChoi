@@ -1,5 +1,7 @@
 package com.sparta.spangeats.domain.cart.service;
 
+import com.sparta.spangeats.domain.cart.dto.CartItemResponse;
+import com.sparta.spangeats.domain.cart.dto.CartRetrieveResponse;
 import com.sparta.spangeats.domain.cart.dto.CartSaveRequest;
 import com.sparta.spangeats.domain.cart.dto.CartSaveResponse;
 import com.sparta.spangeats.domain.cart.entity.Cart;
@@ -53,6 +55,15 @@ public class CartService {
         return cartRepository.findAllByMemberId(member.getId()).stream()
                 .map(CartSaveResponse::from)
                 .toList();
+    }
+
+    public CartRetrieveResponse retrieve(Member member) {
+        List<Cart> carts = cartRepository.findAllByMemberId(member.getId());
+        List<CartItemResponse> cartItems = carts.stream()
+                .map(CartItemResponse::from)
+                .toList();
+
+        return CartRetrieveResponse.of(cartItems, member);
     }
 
     private boolean isDifferentStoreId(Long storeId, Long memberId) {
