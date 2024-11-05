@@ -11,7 +11,6 @@ import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,6 @@ public class MenuService {
         this.storeRepository = storeRepository;
     }
 
-
     // 메뉴 생성
     public MenuResponseDto createMenu(Long storeId, MenuRequestDto requestDto) {
         Store store = storeRepository.findById(storeId)
@@ -37,20 +35,20 @@ public class MenuService {
             throw new InvalidMenuDataException();
         }
 
+        if (requestDto.description() == null || requestDto.description().isBlank()) {
+            throw new InvalidMenuDescriptionException("메뉴 설명은 필수 항목입니다.");
+        }
+
         if (menuRepository.existsByNameAndStoreId(requestDto.name(), storeId)) {
             throw new MenuAlreadyExistsException(requestDto.name());
         }
 
-
         Menu menu = new Menu(
-                null,
                 store,
                 requestDto.name(),
                 requestDto.price(),
                 MenuStatus.ACTIVE,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-
+                requestDto.description()
         );
 
         Menu savedMenu = menuRepository.save(menu);
@@ -59,48 +57,31 @@ public class MenuService {
 
     // 메뉴 수정
     public MenuResponseDto updateMenu(Long storeId, Long menuId, MenuRequestDto requestDto) {
-        Menu menu = menuRepository.findById(menuId).orElseThrow(MenuNotFoundException::new);
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new MenuNotFoundException("ID " + menuId + "에 해당하는 메뉴를 찾을 수 없습니다."));
 
-        if (!menu.store().getId().equals(storeId)) {
-            throw new InvalidMenuAccessException();
+        if (!menu.getStore().getId().equals(storeId)) {
+            throw new InvalidMenuAccessException("이 메뉴에 대한 접근 권한이 없습니다.");
         }
 
-        if (requestDto.name() == null || requestDto.price() == null) {
-            throw new InvalidMenuDataException();
-        }
+        menu.setName(requestDto.name());
+        menu.setPrice(requestDto.price());
+        menu.setDescription(requestDto.description());
 
-        menu = new Menu(
-                menu.id(),
-                menu.store(),
-                requestDto.name(),
-                requestDto.price(),
-                MenuStatus.ACTIVE, // 상태 ACTIVE 설정
-                menu.createdAt(),
-                LocalDateTime.now()
-        );
-
-        Menu updatedMenu = menuRepository.save(menu);
-        return convertToResponseDto(updatedMenu);
+        menuRepository.save(menu);
+        return convertToResponseDto(menu);
     }
 
     // 메뉴 삭제
     public void deleteMenu(Long storeId, Long menuId) {
-        Menu menu = menuRepository.findById(menuId).orElseThrow(MenuNotFoundException::new);
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new MenuNotFoundException("ID " + menuId + "에 해당하는 메뉴를 찾을 수 없습니다."));
 
-        if (!menu.store().getId().equals(storeId)) {
-            throw new InvalidMenuAccessException();
+        if (!menu.getStore().getId().equals(storeId)) {
+            throw new InvalidMenuAccessException("이 메뉴에 대한 접근 권한이 없습니다.");
         }
 
-        menu = new Menu(
-                menu.id(),
-                menu.store(),
-                menu.name(),
-                menu.price(),
-                MenuStatus.DELETED,
-                menu.createdAt(),
-                menu.updatedAt()
-        );
-
+        menu.setStatus(MenuStatus.DELETED);
         menuRepository.save(menu);
     }
 
@@ -108,13 +89,13 @@ public class MenuService {
     public List<MenuResponseDto> getMenusByStoreId(Long storeId) {
         List<Menu> menus = menuRepository.findAllByStoreId(storeId);
         return menus.stream()
-                .filter(menu -> !menu.status().equals(MenuStatus.DELETED)) // 삭제된 메뉴 제외
+                .filter(menu -> !menu.getStatus().equals(MenuStatus.DELETED)) // 삭제된 메뉴 제외
                 .map(this::convertToResponseDto)
                 .collect(Collectors.toList());
     }
 
     // DTO 변환
     private MenuResponseDto convertToResponseDto(Menu menu) {
-        return new MenuResponseDto(menu.id(), menu.name(), menu.price(), menu.status().name());
+        return new MenuResponseDto(menu.getId(), menu.getName(), menu.getPrice(), menu.getStatus().name(), menu.getDescription());
     }
 }
