@@ -59,12 +59,24 @@ public class MemberService {
             throw new MemberException("현재 비밀번호가 일치하지 않습니다.");
         }
 
-        if (requestDto.nickname() != null && requestDto.nickname().equals(userDetails.getNickname())) {
+        if(!isNickNameVaild(requestDto, userDetails)) {
             throw new MemberException("이미 사용 중인 닉네임입니다.");
         }
 
         Member member = userDetails.getMember();
+        setMemberFields(requestDto, member);
 
+        memberRepository.save(member);
+    }
+
+    private boolean isNickNameVaild (UpdateMemberRequestDto requestDto, UserDetailsImpl userDetails) {
+        if (requestDto.nickname() != null && requestDto.nickname().equals(userDetails.getNickname())) {
+            return false;
+        }
+        return true;
+    }
+
+    private void setMemberFields (UpdateMemberRequestDto requestDto, Member member) {
         if (requestDto.nickname() != null) {
             member.setNickname(requestDto.nickname());
         }
@@ -76,7 +88,5 @@ public class MemberService {
         if (requestDto.newPassword() != null) {
             member.setPassword(passwordEncoder.encode(requestDto.newPassword()));
         }
-
-        memberRepository.save(member);
     }
 }
