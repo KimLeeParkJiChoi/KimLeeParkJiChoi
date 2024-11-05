@@ -1,5 +1,7 @@
 package com.sparta.spangeats.domain.review.service;
 
+import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.repository.MemberRepository;
 import com.sparta.spangeats.domain.order.entity.Order;
 import com.sparta.spangeats.domain.order.repository.OrderRepository;
 import com.sparta.spangeats.domain.review.dto.ReviewRequest;
@@ -24,14 +26,19 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
     private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public String saveReview(Long memberId, Long orderId, ReviewRequest requestDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 정보를 찾을 수 없습니다. 다시 로그인 해주세요."));
+
         Order order = orderRepository.findById(orderId).orElseThrow(() ->
                 new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
 
-        Review review = reviewRepository.findByOrderId(orderId).orElseThrow(() ->
-                new IllegalArgumentException("해당 주문에 대해 이미 리뷰를 남기셨습니다."));
+        if (reviewRepository.existsByOrderId(orderId)) {
+            throw new IllegalArgumentException("해당 주문에 대해 이미 리뷰를 남기셨습니다.");
+        }
 
         Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
 
@@ -41,18 +48,17 @@ public class ReviewService {
         return "리뷰가 생성되었습니다.";
     }
 
-    // 추가 구현 필요
     public ResponseEntity<Page<ReviewResponse>> getALlForStore(int page, int size, String sortBy, boolean isAsc, Long storeId) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));  // 가게 id 만으로 주문을 찾을 수 있음.
+                new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
 
         List<Order> orderList = store.getOrders();
 
-        List<ReviewResponse> response = new ArrayList<>(); // order 테이블에 reviewId 를 넣는다.
+        List<ReviewResponse> response = new ArrayList<>();
         for (Order order : orderList) {
             Long reviewId = order.getReviewId();
             Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
