@@ -25,7 +25,7 @@ public class Menu extends Timestamped {
     private MenuStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "store_id", insertable = false, updatable = false)
+    @JoinColumn(name = "store_id")
     private Store store; // 가게와의 연관관계
 
     @Column(nullable = false)
