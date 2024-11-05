@@ -3,6 +3,7 @@ package com.sparta.spangeats.domain.store.service;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.store.dto.StoreRequestDto;
 import com.sparta.spangeats.domain.store.dto.StoreResponseDto;
+import com.sparta.spangeats.domain.store.dto.StoreSearchDto;
 import com.sparta.spangeats.domain.store.entity.Store;
 import com.sparta.spangeats.domain.store.enums.StoreStatus;
 import com.sparta.spangeats.domain.store.exception.StoreException;
@@ -10,8 +11,14 @@ import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import jakarta.transaction.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -68,6 +75,7 @@ public class StoreService {
 
         // Store 정보 업데이트 (변경된 엔티티를 StoreResponseDto로 변환하여 반환)
         store.updateData(storeRequestDto);
+        storeRepository.save(store);
         return StoreResponseDto.from(store);
     }
 
@@ -84,5 +92,20 @@ public class StoreService {
         // 가게 상태를 CLOSED로 변경하여 저장
         store.closeStore();
         storeRepository.save(store);
+    }
+    // 4. 가게 전체 조회 메소드 (페이징처리)
+    public List<StoreSearchDto> getStoresByNameAsList(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        // OPEN 상태의 가게를 페이징 처리하여 가져옴
+        Page<Store> storesPage = storeRepository.findAllByStatus(StoreStatus.OPEN, pageable);
+
+        // 필터링과 매핑을 수행하여 List로 변환
+        List<StoreSearchDto> filteredStores = storesPage.stream()
+                .filter(store -> store.getName().contains(name))
+                .map(StoreSearchDto::from)
+                .collect(Collectors.toList());
+
+        return filteredStores;
     }
 }
