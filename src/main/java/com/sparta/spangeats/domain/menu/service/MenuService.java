@@ -8,7 +8,7 @@ import com.sparta.spangeats.domain.menu.exception.*;
 import com.sparta.spangeats.domain.menu.repository.MenuRepository;
 import com.sparta.spangeats.domain.store.entity.Store;
 import com.sparta.spangeats.domain.store.repository.StoreRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class MenuService {
+
 
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
@@ -25,7 +26,7 @@ public class MenuService {
         this.storeRepository = storeRepository;
     }
 
-    // 메뉴 생성
+    @Transactional
     public MenuResponseDto createMenu(Long storeId, MenuRequestDto requestDto) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new StoreNotFoundException(storeId));
@@ -54,7 +55,7 @@ public class MenuService {
         return convertToResponseDto(savedMenu);
     }
 
-    // 메뉴 수정
+    @Transactional
     public MenuResponseDto updateMenu(Long storeId, Long menuId, MenuRequestDto requestDto) {
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new MenuNotFoundException("ID " + menuId + "에 해당하는 메뉴를 찾을 수 없습니다."));
@@ -71,7 +72,7 @@ public class MenuService {
         return convertToResponseDto(menu);
     }
 
-    // 메뉴 삭제
+
     public void deleteMenu(Long storeId, Long menuId) {
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new MenuNotFoundException("ID " + menuId + "에 해당하는 메뉴를 찾을 수 없습니다."));
@@ -84,7 +85,7 @@ public class MenuService {
         menuRepository.save(menu);
     }
 
-    // 메뉴 목록 조회
+
     public List<MenuResponseDto> getMenusByStoreId(Long storeId) {
         List<Menu> menus = menuRepository.findAllByStoreId(storeId);
         return menus.stream()
@@ -93,8 +94,11 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    // DTO 변환
     private MenuResponseDto convertToResponseDto(Menu menu) {
-        return new MenuResponseDto(menu.getId(), menu.getName(), menu.getPrice(), menu.getStatus().name(), menu.getDescription());
+        return new MenuResponseDto(menu.getId(),
+                menu.getName(),
+                menu.getPrice(),
+                menu.getStatus().name(),
+                menu.getDescription());
     }
 }
