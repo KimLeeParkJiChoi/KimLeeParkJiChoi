@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -82,6 +83,21 @@ public class StoreController {
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponseDto("서버 오류가 발생했습니다."));
+        }
+    }
+
+    // 5. 가게 단건 조회
+    @GetMapping("/{storeId}")
+    public ResponseEntity<Object> getStoreById(@PathVariable Long storeId) {
+        try {
+            StoreIdSearchDto responseDto = storeService.getStoreById(storeId);
+            return ResponseEntity.ok(responseDto);
+        } catch (StoreException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponseDto(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponseDto("서버 오류가 발생했습니다."));
         }
     }
