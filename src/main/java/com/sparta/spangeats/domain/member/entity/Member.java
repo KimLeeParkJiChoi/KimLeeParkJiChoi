@@ -50,4 +50,11 @@ public class Member extends Timestamped {
     public boolean isValidMemberRole() {
         return this.memberRole.equals(MemberRole.OWNER);
     }
+
+    public boolean isValidNickName(String updateNickName, String currentNickName) {
+        if (updateNickName != null && updateNickName.equals(currentNickName)) {
+            return false;
+        }
+        return true;
+    }
 }

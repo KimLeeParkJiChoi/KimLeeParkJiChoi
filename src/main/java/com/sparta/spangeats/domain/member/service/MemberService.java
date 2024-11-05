@@ -1,7 +1,9 @@
 package com.sparta.spangeats.domain.member.service;
 
 import com.sparta.spangeats.domain.member.dto.request.SignoutRequestDto;
+import com.sparta.spangeats.domain.member.dto.request.UpdateMemberRequestDto;
 import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
+import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
@@ -48,5 +50,37 @@ public class MemberService {
                 userDetails.getCreartedAt(),
                 userDetails.getUpdatedAt()
         );
+    }
+
+    @Transactional
+    public void updateMemberInfo(UpdateMemberRequestDto requestDto, UserDetailsImpl userDetails) {
+
+        if (!passwordEncoder.matches(requestDto.currentPassword(), userDetails.getPassword())) {
+            throw new MemberException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        Member member = userDetails.getMember();
+
+        if(!member.isValidNickName(requestDto.nickname(), userDetails.getNickname())) {
+            throw new MemberException("이미 사용 중인 닉네임입니다.");
+        }
+
+        setMemberFields(requestDto, member);
+
+        memberRepository.save(member);
+    }
+
+    private void setMemberFields (UpdateMemberRequestDto requestDto, Member member) {
+        if (requestDto.nickname() != null) {
+            member.setNickname(requestDto.nickname());
+        }
+
+        if (requestDto.phoneNumber() != null) {
+            member.setPhoneNumber(requestDto.phoneNumber());
+        }
+
+        if (requestDto.newPassword() != null) {
+            member.setPassword(passwordEncoder.encode(requestDto.newPassword()));
+        }
     }
 }
