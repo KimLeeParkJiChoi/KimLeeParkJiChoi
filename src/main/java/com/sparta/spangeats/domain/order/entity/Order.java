@@ -41,8 +41,9 @@ public class Order extends Timestamped {
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
-    @Builder
+    private Long reviewId;
 
+    @Builder
     public Order(Member member, Store store, Address address,
                  String riderRequest, String storeRequest,
                  PaymentType paymentType, DeliveryType deliveryType) {
