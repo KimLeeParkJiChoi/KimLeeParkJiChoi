@@ -55,7 +55,7 @@ public class StoreController {
     }
 
     // 3. 가게 삭제 (softdelete)
-    @PatchMapping("/{storeId}")
+    @PatchMapping("/{storeId}/status")
     public ResponseEntity<Object> softDeleteStore(@PathVariable Long storeId,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         try {
