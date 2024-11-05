@@ -1,17 +1,17 @@
 package com.sparta.spangeats.domain.cart.service;
 
-import com.sparta.spangeats.domain.cart.dto.CartItemResponse;
-import com.sparta.spangeats.domain.cart.dto.CartRetrieveResponse;
-import com.sparta.spangeats.domain.cart.dto.CartSaveRequest;
-import com.sparta.spangeats.domain.cart.dto.CartSaveResponse;
+import com.sparta.spangeats.domain.cart.dto.*;
 import com.sparta.spangeats.domain.cart.entity.Cart;
+import com.sparta.spangeats.domain.cart.exception.CartNotFoundException;
 import com.sparta.spangeats.domain.cart.repository.CartRepository;
 import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.menu.repository.MenuRepository;
 import com.sparta.spangeats.domain.store.entity.Store;
 import com.sparta.spangeats.domain.store.exception.StoreException;
 import com.sparta.spangeats.domain.store.repository.StoreRepository;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,6 +64,17 @@ public class CartService {
                 .toList();
 
         return CartRetrieveResponse.of(cartItems, member);
+    }
+
+    @Transactional
+    public void updateMenuQuantity(Long cartId, CartUpdateMenuRequest request, Member member) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("해당 장바구니 내역을 찾을 수 없습니다. 메뉴, 가게 id: " + cartId));
+        if (!cart.isValidMember(member.getId(), cart.getMember().getId())) {
+            throw new ValidationException("수정할 권한이 없습니다.");
+        }
+        cart.updateMenuQuantity(request.quantity());
+        cartRepository.save(cart);
     }
 
     private boolean isDifferentStoreId(Long storeId, Long memberId) {
