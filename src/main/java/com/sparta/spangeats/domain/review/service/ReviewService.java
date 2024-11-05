@@ -1,5 +1,6 @@
 package com.sparta.spangeats.domain.review.service;
 
+import com.sparta.spangeats.domain.order.entity.Order;
 import com.sparta.spangeats.domain.order.repository.OrderRepository;
 import com.sparta.spangeats.domain.review.dto.ReviewRequest;
 import com.sparta.spangeats.domain.review.dto.ReviewResponse;
@@ -7,7 +8,6 @@ import com.sparta.spangeats.domain.review.entity.Review;
 import com.sparta.spangeats.domain.review.repository.ReviewRepository;
 import com.sparta.spangeats.domain.store.entity.Store;
 import com.sparta.spangeats.domain.store.repository.StoreRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +27,11 @@ public class ReviewService {
 
     @Transactional
     public String saveReview(Long memberId, Long orderId, ReviewRequest requestDto) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+
         Review review = reviewRepository.findByOrderId(orderId).orElseThrow(() ->
                 new IllegalArgumentException("해당 주문에 대해 이미 리뷰를 남기셨습니다."));
-
-        Order order = orderRepository.findById(orderId);
 
         Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
 
