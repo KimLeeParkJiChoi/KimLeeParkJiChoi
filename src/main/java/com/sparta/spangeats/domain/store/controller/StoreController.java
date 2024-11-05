@@ -71,7 +71,7 @@ public class StoreController {
         }
     }
     // 4. 가게 전체 조회 (페이징 처리)
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<Object> getStores(
             @RequestParam String name,
             @RequestParam(defaultValue = "0") int page,
