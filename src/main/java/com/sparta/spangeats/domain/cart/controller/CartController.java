@@ -3,6 +3,7 @@ package com.sparta.spangeats.domain.cart.controller;
 import com.sparta.spangeats.domain.cart.dto.CartRetrieveResponse;
 import com.sparta.spangeats.domain.cart.dto.CartSaveRequest;
 import com.sparta.spangeats.domain.cart.dto.CartSaveResponse;
+import com.sparta.spangeats.domain.cart.dto.CartUpdateMenuRequest;
 import com.sparta.spangeats.domain.cart.service.CartService;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -34,4 +35,13 @@ public class CartController {
         CartRetrieveResponse response = cartService.retrieve(userDetails.getMember());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-}
+
+    @PatchMapping("/{cartId}")
+    public ResponseEntity<String> UpdateMenuQuantity(
+            @PathVariable Long cartId,
+            @Valid @RequestBody CartUpdateMenuRequest request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        cartService.updateMenuQuantity(cartId, request, userDetails.getMember());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+ }

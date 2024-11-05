@@ -1,5 +1,6 @@
 package com.sparta.spangeats.domain.store.controller;
 
+import com.sparta.spangeats.common.ErrorResponseDto;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.store.dto.*;
 import com.sparta.spangeats.domain.store.exception.StoreException;
@@ -7,13 +8,11 @@ import com.sparta.spangeats.domain.store.service.StoreService;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController

@@ -1,6 +1,7 @@
-package com.sparta.spangeats.domain.store.exception;
+package com.sparta.spangeats.common;
 
-import com.sparta.spangeats.domain.store.dto.ErrorResponseDto;
+import com.sparta.spangeats.domain.cart.exception.CartNotFoundException;
+import com.sparta.spangeats.domain.store.exception.StoreException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -15,4 +16,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleStoreExceptionCartNotFoundException(CartNotFoundException ex) {
+        ErrorResponseDto errorResponse = new ErrorResponseDto(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
 }
