@@ -44,7 +44,9 @@ public class MemberService {
                 userDetails.getEmail(),
                 userDetails.getNickname(),
                 userDetails.getPhoneNumber(),
-                userDetails.getMemberRole()
+                userDetails.getMemberRole(),
+                userDetails.getCreartedAt(),
+                userDetails.getUpdatedAt()
         );
     }
 }
