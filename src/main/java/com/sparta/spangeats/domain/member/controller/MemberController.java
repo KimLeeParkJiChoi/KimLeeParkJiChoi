@@ -1,8 +1,8 @@
 package com.sparta.spangeats.domain.member.controller;
 
 import com.sparta.spangeats.domain.member.dto.request.SignoutRequestDto;
+import com.sparta.spangeats.domain.member.dto.request.UpdateMemberRequestDto;
 import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
-import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.service.MemberService;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +32,13 @@ public class MemberController {
 
         MemberInfoResponseDto responseDto = memberService.getMemberInfo(userDetails);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> updateMemberInfo(@RequestBody UpdateMemberRequestDto requestDto,
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        memberService.updateMemberInfo(requestDto, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body("회원 정보가 성공적으로 수정되었습니다.");
     }
 
 }
