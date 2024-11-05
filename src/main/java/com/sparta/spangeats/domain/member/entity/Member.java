@@ -46,4 +46,8 @@ public class Member extends Timestamped {
     public MemberRole getRole() {
         return memberRole;
     }
+
+    public boolean isValidMemberRole() {
+        return this.memberRole.equals(MemberRole.OWNER);
+    }
 }
