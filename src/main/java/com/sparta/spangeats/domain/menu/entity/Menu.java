@@ -4,11 +4,12 @@ import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor
 @Table(name = "menus")
 public class Menu extends Timestamped {
     @Id
@@ -56,8 +57,13 @@ public class Menu extends Timestamped {
         this.description = description;
     }
 
-    public Menu() {
+    public Menu(String name, Integer price, MenuStatus status, Store store) {
+        this.name = name;
+        this.price = price;
+        this.status = status;
+        this.store = store;
     }
+
     // @OneToMany(mappedBy = "menu")
     //Set<CartItem> cartItems, // 장바구니 아이템과의 연관관계
 
