@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record MenuRequestDto(
-        @NotNull(message = "가게 ID는 필수입니다.") Long storeId,
 
         @NotBlank(message = "메뉴 이름은 필수입니다.")
         @Size(max = 20, message = "메뉴 이름은 20자 이하여야 합니다.") String name,
