@@ -22,18 +22,25 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // 리뷰 생성 , 리뷰 조회(가게) 리턴값으로 리턴
+
     @PostMapping("/save/param")
-    public ResponseEntity<String> saveReview(@RequestParam Long memberId, Long orderId,
+    public ResponseEntity<String> saveReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                             @RequestParam Long orderId,
                                              @Valid @RequestBody ReviewRequest requestDto) {
+        Long memberId = userDetails.getMemberId();
         String message = reviewService.saveReview(memberId, orderId, requestDto);
         return ResponseEntity.ok(message);
     }
 
     // 리뷰 조회(가게) 추가 구현 필요
     @GetMapping("/store/{storeId}")
-    public ResponseEntity<List<ReviewResponse>> getALlForStore(@PathVariable Long storeId) {
-        return ResponseEntity.ok(reviewService.getALlForStore(storeId));
+    public ResponseEntity<Page<ReviewResponse>> getALlForStore(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "sortBy", defaultValue = "modifiedAt") String sortBy,
+            @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
+            @PathVariable Long storeId) {
+        return reviewService.getALlForStore(page, size, sortBy, isAsc, storeId);
     }
 
     //리뷰 전체 조회(회원별) - 날짜순, 디폴트: 최신
@@ -41,7 +48,7 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewResponse>> getAllForMember(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortBy",defaultValue = "modifiedAt") String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "modifiedAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMemberId();
