@@ -20,7 +20,6 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
 
-    @Autowired
     public MenuService(MenuRepository menuRepository, StoreRepository storeRepository) {
         this.menuRepository = menuRepository;
         this.storeRepository = storeRepository;

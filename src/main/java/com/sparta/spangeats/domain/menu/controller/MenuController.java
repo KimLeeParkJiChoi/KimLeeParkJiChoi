@@ -21,30 +21,29 @@ public class MenuController {
         this.menuService = menuService;
     }
 
-    // 메뉴 생성
     @PostMapping("/{storeId}")
     public ResponseEntity<MenuResponseDto> createMenu(@PathVariable Long storeId, @RequestBody MenuRequestDto requestDto) {
         MenuResponseDto responseDto = menuService.createMenu(storeId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    // 메뉴 목록 조회
     @GetMapping("/{storeId}")
     public ResponseEntity<List<MenuResponseDto>> getMenusByStoreId(@PathVariable Long storeId) {
         List<MenuResponseDto> menus = menuService.getMenusByStoreId(storeId);
         return ResponseEntity.ok(menus);
     }
 
-    // 메뉴 수정
     @PutMapping("/{storeId}/{menuId}")
-    public ResponseEntity<MenuResponseDto> updateMenu(@PathVariable Long storeId, @PathVariable Long menuId, @RequestBody MenuRequestDto requestDto) {
+    public ResponseEntity<MenuResponseDto> updateMenu(@PathVariable Long storeId,
+                                                      @PathVariable Long menuId,
+                                                      @RequestBody MenuRequestDto requestDto) {
         MenuResponseDto responseDto = menuService.updateMenu(storeId, menuId, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 
-    // 메뉴 삭제
     @DeleteMapping("/{storeId}/{menuId}")
-    public ResponseEntity<Void> deleteMenu(@PathVariable Long storeId, @PathVariable Long menuId) {
+    public ResponseEntity<Void> deleteMenu(@PathVariable Long storeId,
+                                           @PathVariable Long menuId) {
         menuService.deleteMenu(storeId, menuId);
         return ResponseEntity.noContent().build();
     }
