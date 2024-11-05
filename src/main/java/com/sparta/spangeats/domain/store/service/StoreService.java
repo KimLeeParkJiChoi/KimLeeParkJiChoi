@@ -38,8 +38,15 @@ public class StoreService {
             throw new StoreException("가게명은 중복될 수 없습니다.");
         }
         // Store 객체 생성 및 데이터 초기화
-        Store store = new Store();
-        store.initData(storeRequestDto);
+        Store store = new Store(
+                storeRequestDto.name(),
+                storeRequestDto.openTime(),
+                storeRequestDto.closeTime(),
+                storeRequestDto.minOrderPrice(),
+                storeRequestDto.phoneNumber(),
+                storeRequestDto.address(),
+                member // Member 객체를 전달
+        );
 
         // 가게 소유자로 현재 회원 설정하여 저장
         store.setMember(member);

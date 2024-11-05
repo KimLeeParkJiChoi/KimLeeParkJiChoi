@@ -54,15 +54,14 @@ public class Store extends Timestamped {
     @JoinColumn(name = "member_id") // 외래키 설정
     private Member member;
 
-
-    // Store 객체 초기화 메서드
-    public void initData(StoreRequestDto requestDto) {
-        this.name = requestDto.name();
-        this.openTime = requestDto.openTime();
-        this.closeTime = requestDto.closeTime();
-        this.minOrderPrice = requestDto.minOrderPrice();
-        this.phoneNumber = requestDto.phoneNumber();
-        this.address = requestDto.address();
+    public Store(String name, LocalTime openTime, LocalTime closeTime, Long minOrderPrice, String phoneNumber, String address, Member member) {
+        this.name = name;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.minOrderPrice = minOrderPrice;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.member = member;
     }
 
     // Member 설정 메서드
