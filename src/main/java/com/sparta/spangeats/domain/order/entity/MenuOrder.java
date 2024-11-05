@@ -1,11 +1,11 @@
 package com.sparta.spangeats.domain.order.entity;
 
+import com.sparta.spangeats.domain.menu.entity.Menu;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
