@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 public record StoreResponseDto(
         Long id,
-        String memberId,
+        Long memberId,
         String name,
         LocalTime openTime,
         LocalTime closeTime,
@@ -18,12 +18,14 @@ public record StoreResponseDto(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
+
+
     // Store 엔터티 -> StoreResponseDto 변환 메서드
     public static StoreResponseDto from(Store store) {
         return new StoreResponseDto(
                 store.getId(),
+                store.getMember().getId(),
                 store.getName(),
-                store.getMember().getId(), // Member의 ID만 가져옴
                 store.getOpenTime(),
                 store.getCloseTime(),
                 store.getMinOrderPrice(),

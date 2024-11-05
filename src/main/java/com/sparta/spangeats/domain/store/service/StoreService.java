@@ -68,6 +68,7 @@ public class StoreService {
 
         // Store 정보 업데이트 (변경된 엔티티를 StoreResponseDto로 변환하여 반환)
         store.updateData(storeRequestDto);
+        storeRepository.save(store);
         return StoreResponseDto.from(store);
     }
 
