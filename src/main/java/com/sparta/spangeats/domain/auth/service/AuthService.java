@@ -15,6 +15,7 @@ import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,8 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final CustomPasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    @Value("${admin.secret.key}")
+    private String adminKey;
 
     @Transactional
     public void signup(SignupRequestDto requestDto) {
@@ -37,9 +40,14 @@ public class AuthService {
             throw new AuthException("이미 존재하는 닉네임 입니다.");
         }
 
-        String encodedPassword = passwordEncoder.encode(requestDto.password());
+        // 관리자 역할 검증 및 반환
+        MemberRole memberRole = MemberRole.from(
+                requestDto.memberRole(),
+                adminKey, // 실제 관리자 키
+                requestDto.adminSecretKey() // 요청에서 받은 관리자 키
+        );
 
-        MemberRole memberRole = MemberRole.of(requestDto.memberRole());
+        String encodedPassword = passwordEncoder.encode(requestDto.password());
 
         // 사용자 등록
         Member member = new Member(requestDto.email(),
