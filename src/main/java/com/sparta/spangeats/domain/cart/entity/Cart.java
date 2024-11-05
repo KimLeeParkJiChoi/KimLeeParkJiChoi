@@ -2,13 +2,15 @@ package com.sparta.spangeats.domain.cart.entity;
 
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.menu.entity.Menu;
+import com.sparta.spangeats.domain.store.entity.Store;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Cart {
     @Id
@@ -23,12 +25,24 @@ public class Cart {
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 
-    private int quantity;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", nullable = false)
+    private Store store;
+
+    private Long quantity;
+    private Long price;
 
     @Builder
-    public Cart(Member member, Menu menu, int quantity) {
+    public Cart(Member member, Menu menu, Store store, Long quantity, Long price) {
         this.member = member;
         this.menu = menu;
+        this.store = store;
         this.quantity = quantity;
+        this.price = price;
     }
+
+    public void updateQuantity(Long additionalQuantity) {
+        this.quantity += additionalQuantity;
+    }
+
 }
