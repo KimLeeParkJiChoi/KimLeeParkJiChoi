@@ -27,7 +27,8 @@ public class ReviewService {
         return "리뷰가 생성되었습니다.";
     }
 
-    // 추가 구현 필요
+    // 추가 구현 필요, 주문 하나 당 리뷰 하나를 작성할 수 있음. 리뷰는 가게와 연관관계 x,
+    // 하지만 가게에 따라 리뷰를 조회할 수 있어야함.....
     public List<ReviewResponse> getALlForStore(Long storeId) {
         return null;
     }
