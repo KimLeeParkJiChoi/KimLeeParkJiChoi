@@ -35,7 +35,7 @@ public class ReviewService {
 
         Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
 
-        order.setReviewId(review.getId());
+        order.setReviewId(savedReview.getId());
 
         reviewRepository.save(savedReview);
         return "리뷰가 생성되었습니다.";
