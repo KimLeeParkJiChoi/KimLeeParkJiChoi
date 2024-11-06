@@ -48,6 +48,8 @@ public class Order extends Timestamped {
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
+    private Integer totalPrice;
+
     @Setter
     @Getter
     private Long reviewId;
@@ -58,7 +60,7 @@ public class Order extends Timestamped {
     @Builder
     public Order(Member member, Store store, Address address,
                  String riderRequest, String storeRequest,
-                 PaymentType paymentType, DeliveryType deliveryType) {
+                 PaymentType paymentType, DeliveryType deliveryType, Integer totalPrice) {
         this.member = member;
         this.store = store;
         this.address = address;
@@ -67,6 +69,7 @@ public class Order extends Timestamped {
         this.storeRequest = storeRequest;
         this.paymentType = paymentType;
         this.deliveryType = deliveryType;
+        this.totalPrice = totalPrice;
     }
 
     public Order(Long reviewId) {

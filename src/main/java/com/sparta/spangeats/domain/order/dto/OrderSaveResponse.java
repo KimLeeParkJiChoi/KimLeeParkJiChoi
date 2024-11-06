@@ -19,7 +19,8 @@ public record OrderSaveResponse(
         PaymentType paymentType,
         DeliveryType deliveryType,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        Integer totalPrice
 ) {
     public static OrderSaveResponse from(Order order) {
         return OrderSaveResponse.builder()
@@ -33,6 +34,7 @@ public record OrderSaveResponse(
                 .deliveryType(order.getDeliveryType())
                 .createdAt(order.getCreatedAt())
                 .updatedAt(order.getUpdatedAt())
+                .totalPrice(order.getTotalPrice())
                 .build();
     }
 }

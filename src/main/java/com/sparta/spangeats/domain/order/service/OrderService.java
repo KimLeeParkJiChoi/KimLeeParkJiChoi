@@ -46,6 +46,7 @@ public class OrderService {
                 .storeRequest(request.storeRequest())
                 .paymentType(request.paymentType())
                 .deliveryType(request.deliveryType())
+                .totalPrice(request.totalPrice())
                 .build();
         orderRepository.save(order);
 
@@ -64,4 +65,6 @@ public class OrderService {
                 .toList();
         return OrderSaveResponse.from(order);
     }
+
+
 }
