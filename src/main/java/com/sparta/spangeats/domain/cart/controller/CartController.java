@@ -1,5 +1,6 @@
 package com.sparta.spangeats.domain.cart.controller;
 
+import com.sparta.spangeats.domain.cart.dto.*;
 import com.sparta.spangeats.domain.cart.dto.CartRetrieveResponse;
 import com.sparta.spangeats.domain.cart.dto.CartSaveRequest;
 import com.sparta.spangeats.domain.cart.dto.CartSaveResponse;
@@ -37,11 +38,21 @@ public class CartController {
     }
 
     @PatchMapping("/{cartId}")
-    public ResponseEntity<String> UpdateMenuQuantity(
+    public ResponseEntity<String> UpdateMenuQuantityInCart(
             @PathVariable Long cartId,
             @Valid @RequestBody CartUpdateMenuRequest request,
-            @AuthenticationPrincipal UserDetailsImpl userDetails){
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ){
         cartService.updateMenuQuantity(cartId, request, userDetails.getMember());
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<String> deleteMenuInCart(
+            @PathVariable Long cartId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        cartService.deleteMenu(cartId, userDetails.getMember());
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
  }
