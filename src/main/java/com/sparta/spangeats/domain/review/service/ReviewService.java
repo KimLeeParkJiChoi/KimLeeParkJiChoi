@@ -49,16 +49,16 @@ public class ReviewService {
     }
 
     public ResponseEntity<Page<ReviewResponse>> getALlForStore(int page, int size, String sortBy, boolean isAsc, Long storeId) {
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
+
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Store store = storeRepository.findById(storeId).orElseThrow(() ->
-                new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
-
         List<Order> orderList = store.getOrders();
-
         List<ReviewResponse> response = new ArrayList<>();
+
         for (Order order : orderList) {
             Long reviewId = order.getReviewId();
             Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
