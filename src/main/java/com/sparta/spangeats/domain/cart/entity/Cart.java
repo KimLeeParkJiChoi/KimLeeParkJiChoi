@@ -45,4 +45,11 @@ public class Cart {
         this.quantity += additionalQuantity;
     }
 
+    public void updateMenuQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
+
+    public boolean isValidMember(Long checkedMemberId, Long realMemberId) {
+        return checkedMemberId.equals(realMemberId);
+    }
 }
