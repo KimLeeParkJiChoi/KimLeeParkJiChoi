@@ -69,12 +69,23 @@ public class CartService {
     @Transactional
     public void updateMenuQuantity(Long cartId, CartUpdateMenuRequest request, Member member) {
         Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("해당 장바구니 내역을 찾을 수 없습니다. 메뉴, 가게 id: " + cartId));
+                .orElseThrow(() -> new CartNotFoundException("해당 장바구니 내역을 찾을 수 없습니다." + cartId));
         if (!cart.isValidMember(member.getId(), cart.getMember().getId())) {
             throw new ValidationException("수정할 권한이 없습니다.");
         }
         cart.updateMenuQuantity(request.quantity());
         cartRepository.save(cart);
+    }
+
+    @Transactional
+    public void deleteMenu(Long cartId, Member member) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new CartNotFoundException("해당 장바구니 내역을 찾을 수 없습니다." + cartId));
+        if (!cart.isValidMember(member.getId(), cart.getMember().getId())) {
+            throw new ValidationException("삭제할 권한이 없습니다.");
+        }
+
+        cartRepository.deleteById(cartId);
     }
 
     private boolean isDifferentStoreId(Long storeId, Long memberId) {
