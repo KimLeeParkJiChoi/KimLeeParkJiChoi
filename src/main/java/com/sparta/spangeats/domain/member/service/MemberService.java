@@ -55,7 +55,8 @@ public class MemberService {
                 userDetails.getPhoneNumber(),
                 userDetails.getMemberRole(),
                 userDetails.getCreartedAt(),
-                userDetails.getUpdatedAt()
+                userDetails.getUpdatedAt(),
+                userDetails.getMember().getKakaoId()
         );
     }
 
@@ -70,7 +71,8 @@ public class MemberService {
                         member.getMemberRole(),
                         member.getMemberStatus(),
                         member.getCreatedAt(),
-                        member.getUpdatedAt()
+                        member.getUpdatedAt(),
+                        member.getKakaoId()
                 ))
                 .collect(Collectors.toList());
     }

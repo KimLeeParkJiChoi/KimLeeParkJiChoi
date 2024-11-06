@@ -10,5 +10,6 @@ public record MemberInfoResponseDto(
         String phoneNumber,
         MemberRole memberRole,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
+        LocalDateTime updatedAt,
+        Long kakaoId) {
 }

@@ -38,7 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             if (!jwtUtil.validateToken(tokenValue)) {
                 log.error("Token Error");
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰입니다.");
+                sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "유효하지 않은 토큰입니다.");
                 return;
             }
 
@@ -47,7 +47,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             // ADMIN 권한이 필요한 경우 권한 검증
             if (requiresAdminRole(request) && !isAdmin(info)) {
                 log.error("접근 권한이 없습니다.");
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");
+                sendErrorResponse(response, HttpServletResponse.SC_FORBIDDEN, "접근 권한이 없습니다.");
                 return;
             }
 
@@ -55,12 +55,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 setAuthentication(info.getSubject());
             } catch (Exception e) {
                 log.error(e.getMessage());
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "인증 설정 오류");
+                sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "인증 설정 오류");
                 return;
             }
 
         }
         filterChain.doFilter(request, response);
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
+        response.setStatus(statusCode); // HTTP 상태 코드 설정
+        response.setContentType("application/json;charset=UTF-8"); // JSON 응답 타입 설정
+        response.getWriter().write(String.format("{\"error\": \"%s\"}", message)); // 에러 메시지 작성
+        response.getWriter().flush();
+        response.getWriter().close(); // writer 닫기
     }
 
     // ADMIN 권한 검증 메서드
