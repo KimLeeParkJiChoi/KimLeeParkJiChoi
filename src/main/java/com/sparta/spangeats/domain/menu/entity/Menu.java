@@ -34,6 +34,10 @@ public class Menu extends Timestamped {
     @Column(nullable = false)
     private String description;  // 메뉴 설명
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private MenuCategory category; // 메뉴 카테고리
+
     // 생성자
     public Menu(Store store,
                 String name,
@@ -51,19 +55,26 @@ public class Menu extends Timestamped {
                        String name,
                        Integer price,
                        MenuStatus status,
-                       String description) {
+                       String description,
+                       MenuCategory category) {
         this.store = store;
         this.name = name;
         this.price = price;
         this.status = status;
         this.description = description;
+        this.category = category;
     }
 
-    public Menu(String name, Integer price, MenuStatus status, Store store) {
+    public Menu(String name,
+                Integer price,
+                MenuStatus status,
+                Store store,
+                MenuCategory category) {
         this.name = name;
         this.price = price;
         this.status = status;
         this.store = store;
+        this.category = category;
     }
 
     // @OneToMany(mappedBy = "menu")
