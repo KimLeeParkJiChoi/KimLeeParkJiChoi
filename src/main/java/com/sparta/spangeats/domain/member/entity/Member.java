@@ -30,11 +30,13 @@ public class Member extends Timestamped {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
-    @Column(nullable = false)
+    @Column
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus = MemberStatus.ACTIVE;
+
+    private Long kakaoId;
 
     public Member(String email, String password, String nickname, MemberRole role, String phoneNumber) {
         this.email = email;
@@ -42,6 +44,15 @@ public class Member extends Timestamped {
         this.nickname = nickname;
         this.memberRole = role;
         this.phoneNumber = phoneNumber;
+    }
+
+    // 카카오 회원 생성자
+    public Member(String email, String password, String nickname, MemberRole role, Long kakaoId) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.memberRole = role;
+        this.kakaoId = kakaoId;
     }
 
     public MemberRole getRole() {

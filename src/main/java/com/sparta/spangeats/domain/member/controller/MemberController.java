@@ -20,7 +20,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @DeleteMapping("/signout")
+    @PatchMapping("/signout")
     public ResponseEntity<String> signout(@RequestBody SignoutRequestDto requestDto,
                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
         memberService.signout(requestDto, userDetails);
