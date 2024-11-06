@@ -1,6 +1,7 @@
 package com.sparta.spangeats.domain.review.dto;
 
 import com.sparta.spangeats.domain.review.entity.Review;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
@@ -9,5 +10,9 @@ public record ReviewResponse(
     public static ReviewResponse create(Review review) {
         return new ReviewResponse(review.getScore(), review.getContents(),
                 review.getCreatedAt(), review.getUpdatedAt());
+    }
+
+    public String getContents() {
+        return this.contents;
     }
 }

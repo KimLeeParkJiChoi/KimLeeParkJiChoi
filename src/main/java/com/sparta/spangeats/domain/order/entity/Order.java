@@ -57,4 +57,8 @@ public class Order extends Timestamped {
         this.paymentType = paymentType;
         this.deliveryType = deliveryType;
     }
+
+    public Order(Long reviewId) {
+        this.reviewId = reviewId;
+    }
 }

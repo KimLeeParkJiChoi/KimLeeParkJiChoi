@@ -48,18 +48,27 @@ public class ReviewService {
         return "리뷰가 생성되었습니다.";
     }
 
-//  가게와 주문의 연관관계 형성 후 가능
-    public ResponseEntity<Page<ReviewResponse>> getALlForStore(int page, int size, String sortBy, boolean isAsc, Long storeId) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public Page<ReviewResponse> getALlForStore(
+            int page, int size, String sortBy, boolean isAsc, Long storeId) {
 
         Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
 
-        List<Order> orderList = store.getOrders();
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
+        List<Order> orderList = store.getOrders();
         List<ReviewResponse> response = new ArrayList<>();
+
+/* JPQL 사용한 메서드. 무시하셔도 됩니다.
+
+ Page<Review> reviews = reviewRepository.findAllForStore(pageable);
+        Page<ReviewResponse> responses = reviews.map(
+                review -> {return new ReviewResponse(review.getScore(), review.getContents(),
+                        review.getCreatedAt(), review.getUpdatedAt());}
+        );*/
+
         for (Order order : orderList) {
             Long reviewId = order.getReviewId();
             Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
@@ -74,15 +83,18 @@ public class ReviewService {
         int end = Math.min((start + pageable.getPageSize()), response.size());
         Page<ReviewResponse> pageResponse = new PageImpl<>(response.subList(start, end), pageable, response.size());
 
-        return ResponseEntity.ok(pageResponse);
+        return pageResponse;
     }
 
     public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 정보를 찾을 수 없습니다. 다시 로그인 해주세요."));
+
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        Page<Review> reviewList = reviewRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+        Page<Review> reviewList = reviewRepository.findAllByMemberIdOrderByCreatedAtDesc(member.getId(), pageable);
 
         return reviewList.map(review -> ReviewResponse.create(review));
     }

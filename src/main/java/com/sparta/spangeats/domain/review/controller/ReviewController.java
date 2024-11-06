@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-
-// 유저(1:n)와 오더(1:1)랑 연관 관계 있음. -> username, orderId 부분 수정 필요
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/reviews")
@@ -30,7 +28,6 @@ public class ReviewController {
         return ResponseEntity.ok(message);
     }
 
-   //  리뷰 조회(가게) 추가 구현 필요, 가게와 주문의 연관관계 형성 후 가능
     @GetMapping("/store/{storeId}")
     public ResponseEntity<Page<ReviewResponse>> getALlForStore(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -38,10 +35,9 @@ public class ReviewController {
             @RequestParam(value = "sortBy", defaultValue = "modifiedAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
             @PathVariable Long storeId) {
-        return reviewService.getALlForStore(page, size, sortBy, isAsc, storeId);
+        return  ResponseEntity.ok(reviewService.getALlForStore(page, size, sortBy, isAsc, storeId));
     }
 
-    //리뷰 전체 조회(회원별) - 날짜순, 디폴트: 최신
     @GetMapping("/get/review/member")
     public ResponseEntity<Page<ReviewResponse>> getAllForMember(
             @RequestParam(value = "page", defaultValue = "0") int page,
