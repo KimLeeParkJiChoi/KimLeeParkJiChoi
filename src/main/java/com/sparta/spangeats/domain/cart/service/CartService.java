@@ -13,9 +13,12 @@ import com.sparta.spangeats.domain.store.exception.StoreException;
 import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -86,6 +89,13 @@ public class CartService {
         }
 
         cartRepository.deleteById(cartId);
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")
+    public void clearExpiredCarts(){
+        LocalDateTime checkTime = LocalDateTime.now().minusHours(24);
+        cartRepository.deleteAllByUpdatedAtBefore(checkTime);
     }
 
     private boolean isDifferentStoreId(Long storeId, Long memberId) {
