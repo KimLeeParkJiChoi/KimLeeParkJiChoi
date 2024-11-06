@@ -1,5 +1,6 @@
 package com.sparta.spangeats.domain.cart.entity;
 
+import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.store.entity.Store;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Cart {
+public class Cart extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
