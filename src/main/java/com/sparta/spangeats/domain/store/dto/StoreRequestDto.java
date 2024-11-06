@@ -26,5 +26,8 @@ public record StoreRequestDto(
 
         @NotBlank(message = "주소는 필수입니다.")
         @Size(max = 100, message = "주소는 100자 이하로 입력해야 합니다.")
-        String address
+        String address,
+
+        @Size(max = 1000, message = "공지 사항은 1000자 이하로 입력해야 합니다.")
+        String notice // 공지 필드 추가
 ) {}

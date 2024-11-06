@@ -45,6 +45,9 @@ public class Store extends Timestamped {
     @Column
     private String address;
 
+    @Column
+    private String notice;
+
     @OneToMany(mappedBy = "store") // Store와 Menu의 연관관계
     private List<Menu> menus = new ArrayList<>();
 
@@ -56,13 +59,14 @@ public class Store extends Timestamped {
     @JoinColumn(name = "member_id") // 외래키 설정
     private Member member;
 
-    public Store(String name, LocalTime openTime, LocalTime closeTime, Long minOrderPrice, String phoneNumber, String address, Member member) {
+    public Store(String name, LocalTime openTime, LocalTime closeTime, Long minOrderPrice, String phoneNumber, String address, String notice, Member member) {
         this.name = name;
         this.openTime = openTime;
         this.closeTime = closeTime;
         this.minOrderPrice = minOrderPrice;
         this.phoneNumber = phoneNumber;
         this.address = address;
+        this.notice = notice;
         this.member = member;
     }
 
@@ -71,22 +75,6 @@ public class Store extends Timestamped {
         this.member = member;
     }
 
-    // 가게 생성시, requestDto -> 엔터티
-    public static Store from(StoreRequestDto requestDto) {
-        Store store = new Store();
-        store.initData(requestDto);
-        return store;
-    }
-
-
-    public void initData(StoreRequestDto requestDto) {
-        this.name = requestDto.name();
-        this.openTime = requestDto.openTime();
-        this.closeTime = requestDto.closeTime();
-        this.minOrderPrice = requestDto.minOrderPrice();
-        this.phoneNumber = requestDto.phoneNumber();
-        this.address = requestDto.address();
-    }
 
     // 가게정보 수정시, 수정된 requestDto -> 엔터티 (status 기본값 유지)
     public void updateData(StoreRequestDto requestDto) {
@@ -96,6 +84,7 @@ public class Store extends Timestamped {
         this.minOrderPrice = requestDto.minOrderPrice();
         this.phoneNumber = requestDto.phoneNumber();
         this.address = requestDto.address();
+        this.notice = requestDto.notice(); // 공지 추가
     }
 
     //폐업 상태 메서드

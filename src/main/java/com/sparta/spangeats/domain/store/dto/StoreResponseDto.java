@@ -15,6 +15,7 @@ public record StoreResponseDto(
         String phoneNumber,
         String address,
         StoreStatus status, // 상태 (OPEN 또는 CLOSED)
+        String notice, // 공지 추가
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -32,6 +33,7 @@ public record StoreResponseDto(
                 store.getPhoneNumber(),
                 store.getAddress(),
                 store.getStatus(),
+                store.getNotice(), // 공지 추가
                 store.getCreatedAt(),
                 store.getUpdatedAt()
         );
