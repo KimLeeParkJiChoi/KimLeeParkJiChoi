@@ -13,6 +13,7 @@ public record StoreIdSearchDto(
     Long minOrderPrice,
     String phoneNumber,
     String address,
+    String notice, // 공지 추가
     List<Menu> menus
 
 ){  public static StoreIdSearchDto from(Store store) {
@@ -23,6 +24,7 @@ public record StoreIdSearchDto(
             store.getMinOrderPrice(),
             store.getPhoneNumber(),
             store.getAddress(),
+            store.getNotice(), // 공지 추가
             store.getMenus() // 연관된 메뉴들
     );
 }

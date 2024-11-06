@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,21 @@ import java.util.stream.Collectors;
 public class StoreService {
 
     private final StoreRepository storeRepository;
+
+    // 금기어 리스트
+    private static final List<String> FORBIDDEN_WORDS = Arrays.asList("1조바보", "쭈쭈");
+
+    // 금기어 검사 메서드
+    private void checkForForbiddenWords(String notice) {
+        if (notice != null) {
+            for (String forbiddenWord : FORBIDDEN_WORDS) {
+                if (notice.contains(forbiddenWord)) {
+                    throw new StoreException("공지사항에 금기어가 포함되어 있습니다.");
+                }
+            }
+        }
+    }
+
 
     // 1. 가게 생성 메소드
     @Transactional
@@ -45,6 +61,10 @@ public class StoreService {
         if (storeRepository.existsByName(storeRequestDto.name())) {
             throw new StoreException("가게명은 중복될 수 없습니다.");
         }
+
+        // 공지사항에 금기어 포함 여부 확인
+        checkForForbiddenWords(storeRequestDto.notice());
+
         // Store 객체 생성 및 데이터 초기화
         Store store = new Store(
                 storeRequestDto.name(),
@@ -53,6 +73,7 @@ public class StoreService {
                 storeRequestDto.minOrderPrice(),
                 storeRequestDto.phoneNumber(),
                 storeRequestDto.address(),
+                storeRequestDto.notice(), // 공지 추가
                 member // Member 객체를 전달
         );
 
@@ -73,6 +94,9 @@ public class StoreService {
         // Store 조회
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new StoreException("해당 가게를 찾을 수 없습니다."));
+
+        // 공지사항에 금기어 포함 여부 확인
+        checkForForbiddenWords(storeRequestDto.notice());
 
         // Store 정보 업데이트 (변경된 엔티티를 StoreResponseDto로 변환하여 반환)
         store.updateData(storeRequestDto);
