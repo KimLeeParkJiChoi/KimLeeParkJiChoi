@@ -6,10 +6,12 @@ import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.menu.exception.MenuNotFoundException;
 import com.sparta.spangeats.domain.menu.repository.MenuRepository;
+import com.sparta.spangeats.domain.order.dto.OrderResponse;
 import com.sparta.spangeats.domain.order.dto.OrderSaveRequest;
 import com.sparta.spangeats.domain.order.dto.OrderSaveResponse;
 import com.sparta.spangeats.domain.order.entity.MenuOrder;
 import com.sparta.spangeats.domain.order.entity.Order;
+import com.sparta.spangeats.domain.order.exception.OrderNotFoundException;
 import com.sparta.spangeats.domain.order.repository.MenuOrderRepository;
 import com.sparta.spangeats.domain.order.repository.OrderRepository;
 import com.sparta.spangeats.domain.store.entity.Store;
@@ -67,4 +69,10 @@ public class OrderService {
     }
 
 
+    public OrderResponse retrieveOne(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("해당 주문을 조회할 수 없습니다."));
+
+        return OrderResponse.from(order);
+    }
 }
