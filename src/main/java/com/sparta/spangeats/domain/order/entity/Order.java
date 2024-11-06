@@ -5,14 +5,13 @@ import com.sparta.spangeats.domain.address.entity.Address;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.store.entity.Store;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "orders")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Order extends Timestamped {
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,6 +40,8 @@ public class Order extends Timestamped {
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryType;
 
+    @Setter
+    @Getter
     private Long reviewId;
 
     @Builder

@@ -11,6 +11,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "menus")
 public class Menu extends Timestamped {
