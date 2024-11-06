@@ -103,6 +103,16 @@ public class ReviewTest {
     @DisplayName("리뷰 삭제 - 성공")
     @Order(5)
     void test5() {
+        // given
+        Long id = 10L;
+        when(reviewRepository.findById(id)).thenReturn(Optional.of(review));
+
+        // when
+        String result = reviewService.delete(10L);
+
+        // then
+        assertEquals("리뷰가 삭제되었습니다.", result);
+        verify(reviewRepository, times(1)).delete(any(Review.class));
 
     }
 }
