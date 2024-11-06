@@ -6,9 +6,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "menus")
 public class Menu extends Timestamped {
