@@ -48,7 +48,9 @@ public class ReviewService {
         return "리뷰가 생성되었습니다.";
     }
 
-    public ResponseEntity<Page<ReviewResponse>> getALlForStore(int page, int size, String sortBy, boolean isAsc, Long storeId) {
+    public Page<ReviewResponse> getALlForStore(
+            int page, int size, String sortBy, boolean isAsc, Long storeId) {
+
         Store store = storeRepository.findById(storeId).orElseThrow(() ->
                 new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
 
@@ -58,6 +60,14 @@ public class ReviewService {
 
         List<Order> orderList = store.getOrders();
         List<ReviewResponse> response = new ArrayList<>();
+
+/* JPQL 사용한 메서드. 무시하셔도 됩니다.
+
+ Page<Review> reviews = reviewRepository.findAllForStore(pageable);
+        Page<ReviewResponse> responses = reviews.map(
+                review -> {return new ReviewResponse(review.getScore(), review.getContents(),
+                        review.getCreatedAt(), review.getUpdatedAt());}
+        );*/
 
         for (Order order : orderList) {
             Long reviewId = order.getReviewId();
@@ -73,7 +83,7 @@ public class ReviewService {
         int end = Math.min((start + pageable.getPageSize()), response.size());
         Page<ReviewResponse> pageResponse = new PageImpl<>(response.subList(start, end), pageable, response.size());
 
-        return ResponseEntity.ok(pageResponse);
+        return pageResponse;
     }
 
     public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {

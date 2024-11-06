@@ -35,7 +35,7 @@ public class ReviewController {
             @RequestParam(value = "sortBy", defaultValue = "modifiedAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
             @PathVariable Long storeId) {
-        return reviewService.getALlForStore(page, size, sortBy, isAsc, storeId);
+        return  ResponseEntity.ok(reviewService.getALlForStore(page, size, sortBy, isAsc, storeId));
     }
 
     @GetMapping("/get/review/member")
