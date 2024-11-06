@@ -95,6 +95,14 @@ public class Store extends Timestamped {
     public List<Menu> getMenus() {
         return menus;
     }
+
+    public void setId(Long storeId) {
+        this.id = storeId;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }
 
 
