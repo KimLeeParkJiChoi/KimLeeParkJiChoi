@@ -2,7 +2,6 @@ package com.sparta.spangeats.domain.member.controller;
 
 import com.sparta.spangeats.domain.member.dto.request.SignoutRequestDto;
 import com.sparta.spangeats.domain.member.dto.request.UpdateMemberRequestDto;
-import com.sparta.spangeats.domain.member.dto.response.AdminMemberInfoResponse;
 import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
 import com.sparta.spangeats.domain.member.service.MemberService;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;

@@ -13,6 +13,7 @@ public record AdminMemberInfoResponse(
         MemberRole memberRole,
         MemberStatus memberStatus,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        Long kakaoId
 ) {
 }

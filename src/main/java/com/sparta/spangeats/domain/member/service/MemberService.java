@@ -5,7 +5,6 @@ import com.sparta.spangeats.domain.member.dto.request.UpdateMemberRequestDto;
 import com.sparta.spangeats.domain.member.dto.response.AdminMemberInfoResponse;
 import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
 import com.sparta.spangeats.domain.member.entity.Member;
-import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
@@ -55,7 +54,8 @@ public class MemberService {
                 userDetails.getPhoneNumber(),
                 userDetails.getMemberRole(),
                 userDetails.getCreartedAt(),
-                userDetails.getUpdatedAt()
+                userDetails.getUpdatedAt(),
+                userDetails.getMember().getKakaoId()
         );
     }
 
@@ -70,7 +70,8 @@ public class MemberService {
                         member.getMemberRole(),
                         member.getMemberStatus(),
                         member.getCreatedAt(),
-                        member.getUpdatedAt()
+                        member.getUpdatedAt(),
+                        member.getKakaoId()
                 ))
                 .collect(Collectors.toList());
     }
