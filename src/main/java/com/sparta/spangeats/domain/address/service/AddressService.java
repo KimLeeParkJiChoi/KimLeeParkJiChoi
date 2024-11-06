@@ -2,10 +2,13 @@ package com.sparta.spangeats.domain.address.service;
 
 import com.sparta.spangeats.domain.address.dto.AddressResponse;
 import com.sparta.spangeats.domain.address.dto.AddressSaveRequest;
+import com.sparta.spangeats.domain.address.dto.AddressUpdateRequest;
 import com.sparta.spangeats.domain.address.entity.Address;
+import com.sparta.spangeats.domain.address.exception.AddressNotFoundException;
 import com.sparta.spangeats.domain.address.exception.AddressOverCountException;
 import com.sparta.spangeats.domain.address.repository.AddressRepository;
 import com.sparta.spangeats.domain.member.entity.Member;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,5 +38,19 @@ public class AddressService {
         return addressRepository.findAllByMemberId(member.getId()).stream()
                 .map(AddressResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public void update(Long addressId, @Valid AddressUpdateRequest request) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new AddressNotFoundException("해당 주소가 존재하지 않습니다." + addressId));
+        address.update(request.address());
+    }
+
+    @Transactional
+    public void delete(Long addressId) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new AddressNotFoundException("해당 주소가 존재하지 않습니다." + addressId));
+        addressRepository.delete(address);
     }
 }

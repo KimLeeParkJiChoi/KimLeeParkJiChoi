@@ -26,4 +26,8 @@ public class Address {
         this.member = member;
         this.address = address;
     }
+
+    public void update(String address) {
+        this.address = address;
+    }
 }
