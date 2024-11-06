@@ -1,4 +1,4 @@
-package com.sparta.spangeats.authtest.service;
+package com.sparta.spangeats.carttest;
 
 import com.sparta.spangeats.domain.cart.dto.CartSaveRequest;
 import com.sparta.spangeats.domain.cart.entity.Cart;
