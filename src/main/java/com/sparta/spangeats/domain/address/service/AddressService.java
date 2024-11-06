@@ -23,4 +23,10 @@ public class AddressService {
                 .build();
         addressRepository.save(address);
     }
+
+    public List<AddressResponse> retrieve(Member member) {
+        return addressRepository.findAllByMemberId(member.getId()).stream()
+                .map(AddressResponse::from)
+                .toList();
+    }
 }
