@@ -1,18 +1,22 @@
 package com.sparta.spangeats.domain.review.service;
 
+import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.repository.MemberRepository;
+import com.sparta.spangeats.domain.order.entity.Order;
+import com.sparta.spangeats.domain.order.repository.OrderRepository;
 import com.sparta.spangeats.domain.review.dto.ReviewRequest;
 import com.sparta.spangeats.domain.review.dto.ReviewResponse;
 import com.sparta.spangeats.domain.review.entity.Review;
 import com.sparta.spangeats.domain.review.repository.ReviewRepository;
-import jakarta.validation.Valid;
+import com.sparta.spangeats.domain.store.entity.Store;
+import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,27 +24,68 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
+    private final StoreRepository storeRepository;
+    private final OrderRepository orderRepository;
+    private final MemberRepository memberRepository;
 
-    // 필터 구현 이후 memberId - > member 로 수정해야함
-    public String saveReview(Long memberId, Long orderId, @Valid ReviewRequest requestDto) {
-        reviewRepository.save(new Review(memberId, orderId, requestDto.score(), requestDto.contents()));
+    @Transactional
+    public String saveReview(Long memberId, Long orderId, ReviewRequest requestDto) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new IllegalArgumentException("회원 정보를 찾을 수 없습니다. 다시 로그인 해주세요."));
+
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                new IllegalArgumentException("해당 주문을 찾을 수 없습니다."));
+
+        if (reviewRepository.existsByOrderId(orderId)) {
+            throw new IllegalArgumentException("해당 주문에 대해 이미 리뷰를 남기셨습니다.");
+        }
+
+        Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
+
+        order.setReviewId(savedReview.getId());
+
+        reviewRepository.save(savedReview);
         return "리뷰가 생성되었습니다.";
     }
 
-    // 추가 구현 필요
-    public List<ReviewResponse> getALlForStore(Long storeId) {
-        return null;
-    }
-
-    /*public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {
+//  가게와 주문의 연관관계 형성 후 가능
+    public ResponseEntity<Page<ReviewResponse>> getALlForStore(int page, int size, String sortBy, boolean isAsc, Long storeId) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        //Page<Review> reviewList = reviewRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+        Store store = storeRepository.findById(storeId).orElseThrow(() ->
+                new IllegalArgumentException("해당 가게를 찾을 수 없습니다."));
+
+        List<Order> orderList = store.getOrders();
+
+        List<ReviewResponse> response = new ArrayList<>();
+        for (Order order : orderList) {
+            Long reviewId = order.getReviewId();
+            Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
+                    new IllegalArgumentException("리뷰를 찾을 수 없습니다.")
+            );
+
+            response.add(ReviewResponse.create(review));
+        }
+
+        // List<ReviewResponse>를 Page<ReviewResponse>로 변환
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), response.size());
+        Page<ReviewResponse> pageResponse = new PageImpl<>(response.subList(start, end), pageable, response.size());
+
+        return ResponseEntity.ok(pageResponse);
+    }
+
+    public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<Review> reviewList = reviewRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId, pageable);
 
         return reviewList.map(review -> ReviewResponse.create(review));
-    }*/
+    }
 
     @Transactional
     public String update(Long reviewId, ReviewRequest requestDto) {
@@ -56,6 +101,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
                 new IllegalArgumentException("리뷰를 찾을 수 없습니다.")
         );
+
         reviewRepository.delete(review);
         return "리뷰가 삭제되었습니다.";
     }
