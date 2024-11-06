@@ -8,6 +8,7 @@ import com.sparta.spangeats.domain.review.dto.ReviewResponse;
 import com.sparta.spangeats.domain.review.entity.Review;
 import com.sparta.spangeats.domain.review.repository.ReviewRepository;
 import com.sparta.spangeats.domain.review.service.ReviewService;
+import com.sparta.spangeats.domain.store.entity.Store;
 import com.sparta.spangeats.domain.store.repository.StoreRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,7 @@ public class ReviewTest {
     Member member = new Member();
     com.sparta.spangeats.domain.order.entity.Order order = new com.sparta.spangeats.domain.order.entity.Order();
     Review review = new Review();
+    Store store = new Store();
 
     @Test
     @DisplayName("리뷰 생성 - 성공")
@@ -74,8 +76,45 @@ public class ReviewTest {
     @DisplayName("가게 별 리뷰 조회 - 성공")
     @Order(2)
     void test2() {
+        // given
+        Long storeId = 1L;
+        store.setId(storeId);
+        int page = 0;
+        int size = 10;
+        String sortBy = "modifiedAt";
+        boolean isAsc = false;
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
+
+        List<com.sparta.spangeats.domain.order.entity.Order> orders = List.of(
+                new com.sparta.spangeats.domain.order.entity.Order(1L),
+                new com.sparta.spangeats.domain.order.entity.Order(2L),
+                new com.sparta.spangeats.domain.order.entity.Order(3L)
+        );
+        store.setOrders(orders);
+        given(storeRepository.findById(storeId)).willReturn(Optional.of(store));
+
+        LocalDateTime time = LocalDateTime.now();
+        given(reviewRepository.findById(1L)).willReturn(Optional.of(
+                new Review(1L, 1L, 5L, "Great!")));
+        given(reviewRepository.findById(2L)).willReturn(Optional.of(
+                new Review(1L, 2L, 4L, "Good!")));
+        given(reviewRepository.findById(3L)).willReturn(Optional.of(
+                new Review(1L, 2L, 4L, "Good!")));
+
+        // when
+        Page<ReviewResponse> result = reviewService.getALlForStore(page, size, sortBy, isAsc, storeId);
+
+        // then
+        assertEquals(3, result.getTotalElements());
+
+        List<ReviewResponse> responses = result.getContent();
+        assertEquals("Great!", responses.get(0).getContents());
+        assertEquals("Good!", responses.get(1).getContents());
     }
+
 
     @Test
     @DisplayName("회원 별 리뷰 조회 - 성공")
