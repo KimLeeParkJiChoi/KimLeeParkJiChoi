@@ -81,7 +81,7 @@ public class ReviewTest {
         store.setId(storeId);
         int page = 0;
         int size = 10;
-        String sortBy = "modifiedAt";
+        String sortBy = "updatedAt";
         boolean isAsc = false;
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
@@ -127,7 +127,7 @@ public class ReviewTest {
 
         int page = 0;
         int size = 10;
-        String sortBy = "modifiedAt";
+        String sortBy = "updatedAt";
         boolean isAsc = false;
 
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
