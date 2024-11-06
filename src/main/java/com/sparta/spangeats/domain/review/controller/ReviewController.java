@@ -19,7 +19,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
 
-    @PostMapping("/save/param")
+    @PostMapping("")
     public ResponseEntity<String> saveReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                              @RequestParam Long orderId,
                                              @Valid @RequestBody ReviewRequest requestDto) {
@@ -38,7 +38,7 @@ public class ReviewController {
         return  ResponseEntity.ok(reviewService.getALlForStore(page, size, sortBy, isAsc, storeId));
     }
 
-    @GetMapping("/get/review/member")
+    @GetMapping("/member")
     public ResponseEntity<Page<ReviewResponse>> getAllForMember(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -50,14 +50,14 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @PatchMapping("/update/{reviewId}")
+    @PatchMapping("/{reviewId}")
     public ResponseEntity<String> update(@PathVariable Long reviewId,
                                          @RequestBody ReviewRequest requestDto) {
         String message = reviewService.update(reviewId, requestDto);
         return ResponseEntity.ok(message);
     }
 
-    @DeleteMapping("/delete/{reviewId}")
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<String> delete(@PathVariable Long reviewId) {
         String message = reviewService.delete(reviewId);
         return ResponseEntity.ok(message);
