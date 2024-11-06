@@ -1,19 +1,21 @@
 package com.sparta.spangeats.domain.auth.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sparta.spangeats.domain.auth.dto.request.LoginRequestDto;
 import com.sparta.spangeats.domain.auth.dto.request.SignupRequestDto;
 import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.service.AuthService;
+import com.sparta.spangeats.domain.auth.service.KakaoService;
+import com.sparta.spangeats.security.config.JwtUtil;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final KakaoService kakaoService;
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDto requestDto) {
@@ -35,5 +38,17 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bearerJwt);
     }
 
+    @GetMapping("/kakao/callback")
+    public ResponseEntity<String> kakaoLogin(@RequestParam String code,
+                                             HttpServletResponse response) throws JsonProcessingException {
+        String token = kakaoService.kakaoLogin(code);
+
+        Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie); // 브라우저의 jwt 값이 set
+
+        return ResponseEntity.status(HttpStatus.OK).body(token + "\t\t\t 로그인 성공");
+    }
 
 }
