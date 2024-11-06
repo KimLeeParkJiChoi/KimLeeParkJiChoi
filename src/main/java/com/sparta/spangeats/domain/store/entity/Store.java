@@ -3,6 +3,7 @@ package com.sparta.spangeats.domain.store.entity;
 import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.menu.entity.Menu;
+import com.sparta.spangeats.domain.order.entity.Order;
 import com.sparta.spangeats.domain.store.dto.StoreRequestDto;
 import com.sparta.spangeats.domain.store.enums.StoreStatus;
 import jakarta.persistence.*;
@@ -48,8 +49,8 @@ public class Store extends Timestamped {
     @OneToMany(mappedBy = "store") // Store와 Menu의 연관관계
     private List<Menu> menus = new ArrayList<>();
 
-//     @OneToMany(mappedBy = "store") // Store와 Order의 연관관계
-//     private List<Order> orders = new ArrayList<>();
+     @OneToMany(mappedBy = "store") // Store와 Order의 연관관계
+     private List<Order> orders = new ArrayList<>();
 
 
     @ManyToOne // Store와 Member의 연관관계

@@ -48,7 +48,7 @@ public class ReviewService {
         return "리뷰가 생성되었습니다.";
     }
 
-/*  가게와 주문의 연관관계 형성 후 가능
+//  가게와 주문의 연관관계 형성 후 가능
     public ResponseEntity<Page<ReviewResponse>> getALlForStore(int page, int size, String sortBy, boolean isAsc, Long storeId) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
@@ -75,7 +75,7 @@ public class ReviewService {
         Page<ReviewResponse> pageResponse = new PageImpl<>(response.subList(start, end), pageable, response.size());
 
         return ResponseEntity.ok(pageResponse);
-    }*/
+    }
 
     public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
