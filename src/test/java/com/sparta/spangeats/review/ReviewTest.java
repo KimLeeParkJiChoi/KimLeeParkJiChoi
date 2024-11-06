@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -56,17 +56,17 @@ public class ReviewTest {
         Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
         savedReview.setId(1L);
         given(reviewRepository.save(any(Review.class))).willReturn(savedReview);
+        review = savedReview;
 
         // when
         String result = reviewService.saveReview(memberId, orderId, requestDto);
 
         // then
         assertEquals("리뷰가 생성되었습니다.", result);
-        assertEquals("리뷰가 생성되었습니다.", result);
-        verify(reviewRepository).save(any(Review.class));
+        verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
-    @Test
+/*    @Test
     @DisplayName("가게 별 리뷰 조회 - 성공")
     @Order(2)
     void test2() {
@@ -78,13 +78,25 @@ public class ReviewTest {
     @Order(3)
     void test3() {
 
-    }
+    }*/
 
     @Test
     @DisplayName("리뷰 수정 - 성공")
     @Order(4)
     void test4() {
+        // given
+        Long id = 1L;
+        ReviewRequest request = new ReviewRequest(2L, "test");
+        when(reviewRepository.findById(id)).thenReturn(Optional.of(review));
 
+        review.update(2L, "test");
+        // when
+        String result = reviewService.update(1L, request);
+
+        // then
+        assertEquals("리뷰를 수정했습니다.", result);
+        assertEquals(2L, review.getScore());
+        assertEquals("test", review.getContents());
     }
 
     @Test
