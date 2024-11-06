@@ -5,7 +5,6 @@ import com.sparta.spangeats.domain.member.dto.request.UpdateMemberRequestDto;
 import com.sparta.spangeats.domain.member.dto.response.AdminMemberInfoResponse;
 import com.sparta.spangeats.domain.member.dto.response.MemberInfoResponseDto;
 import com.sparta.spangeats.domain.member.entity.Member;
-import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.member.enums.MemberStatus;
 import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;

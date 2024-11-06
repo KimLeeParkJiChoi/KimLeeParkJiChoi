@@ -6,13 +6,9 @@ import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.exception.AuthException;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.enums.MemberRole;
-import com.sparta.spangeats.domain.member.enums.MemberStatus;
-import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
 import com.sparta.spangeats.security.config.CustomPasswordEncoder;
 import com.sparta.spangeats.security.config.JwtUtil;
-import com.sparta.spangeats.security.filter.UserDetailsImpl;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,16 +36,14 @@ public class AuthService {
             throw new AuthException("이미 존재하는 닉네임 입니다.");
         }
 
-        // 관리자 역할 검증 및 반환
         MemberRole memberRole = MemberRole.from(
                 requestDto.memberRole(),
-                adminKey, // 실제 관리자 키
-                requestDto.adminSecretKey() // 요청에서 받은 관리자 키
+                adminKey,
+                requestDto.adminSecretKey()
         );
 
         String encodedPassword = passwordEncoder.encode(requestDto.password());
 
-        // 사용자 등록
         Member member = new Member(requestDto.email(),
                 encodedPassword,
                 requestDto.nickname(),

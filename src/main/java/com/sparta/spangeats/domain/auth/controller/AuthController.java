@@ -7,7 +7,6 @@ import com.sparta.spangeats.domain.auth.dto.response.AuthResponseDto;
 import com.sparta.spangeats.domain.auth.service.AuthService;
 import com.sparta.spangeats.domain.auth.service.KakaoService;
 import com.sparta.spangeats.security.config.JwtUtil;
-import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -46,7 +45,7 @@ public class AuthController {
         Cookie cookie = new Cookie(JwtUtil.AUTHORIZATION_HEADER, token.substring(7));
         cookie.setHttpOnly(true);
         cookie.setPath("/");
-        response.addCookie(cookie); // 브라우저의 jwt 값이 set
+        response.addCookie(cookie);
 
         return ResponseEntity.status(HttpStatus.OK).body(token + "\t\t\t 로그인 성공");
     }
