@@ -47,7 +47,7 @@ public class CartServiceTest {
     @Test
     void testCreateCartSuccessfully() {
         Member member = new Member("test@example.com", "password123", "nickname", MemberRole.USER, "123-4567");
-        Store store = new Store("고기집", LocalTime.of(9, 0), LocalTime.of(21, 0), 15000L, "123-4567", "Some address", member);
+        Store store = new Store("고기집", LocalTime.of(9, 0), LocalTime.of(21, 0), 15000L, "123-4567", "Some address", "공지", member);
         Menu menu = new Menu("돼지고기", 10000, MenuStatus.ACTIVE, store);
         // given
         CartSaveRequest request = new CartSaveRequest(1L, 1L, 2L, 1000L);

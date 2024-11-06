@@ -4,9 +4,11 @@ import com.sparta.spangeats.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
     @Id
@@ -22,6 +24,10 @@ public class Address {
     @Builder
     public Address(Member member, String address) {
         this.member = member;
+        this.address = address;
+    }
+
+    public void update(String address) {
         this.address = address;
     }
 }
