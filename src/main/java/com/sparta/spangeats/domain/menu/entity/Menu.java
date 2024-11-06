@@ -2,11 +2,15 @@ package com.sparta.spangeats.domain.menu.entity;
 
 import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.store.entity.Store;
+import com.sparta.spangeats.domain.order.entity.MenuOrder;
 import jakarta.persistence.*;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Setter
@@ -30,6 +34,9 @@ public class Menu extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "store_id")
     private Store store; // 가게와의 연관관계
+
+    @OneToMany(mappedBy = "menu")
+    List<MenuOrder> menuOrders = new ArrayList<>();
 
     @Column(nullable = false)
     private String description;  // 메뉴 설명
@@ -65,10 +72,4 @@ public class Menu extends Timestamped {
         this.status = status;
         this.store = store;
     }
-
-    // @OneToMany(mappedBy = "menu")
-    //Set<CartItem> cartItems, // 장바구니 아이템과의 연관관계
-
-    //@OneToMany(mappedBy = "menu")
-    //Set<MenuOrder> menuOrders // 주문과의 연관관계
 }

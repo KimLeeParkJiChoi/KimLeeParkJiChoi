@@ -1,11 +1,11 @@
 package com.sparta.spangeats.domain.order.entity;
 
 import com.sparta.spangeats.domain.menu.entity.Menu;
+import com.sparta.spangeats.domain.order.entity.Order;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,10 +22,10 @@ public class MenuOrder {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
-    private int quantity;
+    private Long quantity;
 
     @Builder
-    public MenuOrder(Menu menu, Order order, int quantity) {
+    public MenuOrder(Menu menu, Order order, Long quantity) {
         this.menu = menu;
         this.order = order;
         this.quantity = quantity;

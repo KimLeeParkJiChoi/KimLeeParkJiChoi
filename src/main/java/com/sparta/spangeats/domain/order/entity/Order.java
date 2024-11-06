@@ -5,9 +5,17 @@ import com.sparta.spangeats.domain.address.entity.Address;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.store.entity.Store;
 import jakarta.persistence.*;
+
 import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "orders")
 @NoArgsConstructor
 public class Order extends Timestamped {
@@ -43,6 +51,9 @@ public class Order extends Timestamped {
     @Setter
     @Getter
     private Long reviewId;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MenuOrder> menuOrders = new ArrayList<>();
 
     @Builder
     public Order(Member member, Store store, Address address,
