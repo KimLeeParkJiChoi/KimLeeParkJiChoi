@@ -15,12 +15,9 @@ public class Review extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long score;
     private String contents;
-
     private Long orderId;
-
     private Long memberId;
 
     public Review(Long memberId, Long orderId, Long score, String contents) {

@@ -4,6 +4,7 @@ import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.member.repository.MemberRepository;
 import com.sparta.spangeats.domain.order.repository.OrderRepository;
 import com.sparta.spangeats.domain.review.dto.ReviewRequest;
+import com.sparta.spangeats.domain.review.dto.ReviewResponse;
 import com.sparta.spangeats.domain.review.entity.Review;
 import com.sparta.spangeats.domain.review.repository.ReviewRepository;
 import com.sparta.spangeats.domain.review.service.ReviewService;
@@ -13,7 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,7 +70,7 @@ public class ReviewTest {
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
 
-/*    @Test
+    @Test
     @DisplayName("가게 별 리뷰 조회 - 성공")
     @Order(2)
     void test2() {
@@ -77,8 +81,47 @@ public class ReviewTest {
     @DisplayName("회원 별 리뷰 조회 - 성공")
     @Order(3)
     void test3() {
+        // given
+        Long memberId = 1L;
+        member.setId(memberId);
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
 
-    }*/
+        int page = 0;
+        int size = 10;
+        String sortBy = "modifiedAt";
+        boolean isAsc = false;
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // 페이징된 가짜 리뷰 데이터 생성
+        List<Review> reviews = List.of(
+                new Review(memberId, 1L, 5L, "Great!"),
+                new Review(memberId, 2L, 4L, "Good!"),
+                new Review(memberId, 3L, 3L, "Okay")
+        );
+        Page<Review> reviewPage = new PageImpl<>(reviews, pageable, reviews.size());
+        given(reviewRepository.findAllByMemberIdOrderByCreatedAtDesc(memberId, pageable)).willReturn(reviewPage);
+
+        // when
+        Page<ReviewResponse> result = reviewService.getAllForMember(page, size, sortBy, isAsc, memberId);
+
+        // then
+        assertEquals(reviews.size(), result.getTotalElements()); // 총 리뷰 수 확인
+        assertEquals(3, result.getTotalElements()); // 기대한 리뷰 개수와 같은지 확인
+
+        // 각 리뷰가 올바르게 매핑되었는지 확인
+        List<ReviewResponse> responses = result.getContent();
+        assertEquals("Great!", responses.get(0).getContents());
+        assertEquals("Good!", responses.get(1).getContents());
+        assertEquals("Okay", responses.get(2).getContents());
+
+        // 각 리뷰의 멤버 ID가 예상과 일치하는지 확인
+        for (Review response : reviewPage) {
+            assertEquals(memberId, response.getMemberId());
+        }
+    }
 
     @Test
     @DisplayName("리뷰 수정 - 성공")

@@ -64,9 +64,9 @@ public class MenuService {
             throw new InvalidMenuAccessException("이 메뉴에 대한 접근 권한이 없습니다.");
         }
 
-/*        menu.setName(requestDto.name());
+        menu.setName(requestDto.name());
         menu.setPrice(requestDto.price());
-        menu.setDescription(requestDto.description());*/
+        menu.setDescription(requestDto.description());
 
         menuRepository.save(menu);
         return convertToResponseDto(menu);
@@ -81,7 +81,7 @@ public class MenuService {
             throw new InvalidMenuAccessException("이 메뉴에 대한 접근 권한이 없습니다.");
         }
 
-//        menu.setStatus(MenuStatus.DELETED);
+        menu.setStatus(MenuStatus.DELETED);
         menuRepository.save(menu);
     }
 
