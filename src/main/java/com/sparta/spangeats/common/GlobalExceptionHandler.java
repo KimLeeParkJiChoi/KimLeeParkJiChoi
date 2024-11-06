@@ -1,11 +1,19 @@
 package com.sparta.spangeats.common;
 
+import com.sparta.spangeats.domain.address.exception.AddressOverCountException;
+import com.sparta.spangeats.domain.auth.exception.AuthException;
 import com.sparta.spangeats.domain.cart.exception.CartNotFoundException;
+import com.sparta.spangeats.domain.member.exception.MemberException;
 import com.sparta.spangeats.domain.store.exception.StoreException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,7 +36,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(MemberException.class)
+    @ExceptionHandler(value = MemberException.class)
     public ResponseEntity<String> handleMemberException(MemberException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
