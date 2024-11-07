@@ -71,7 +71,7 @@ public class ReviewTest {
         assertEquals("리뷰가 생성되었습니다.", result);
         verify(reviewRepository, times(1)).save(any(Review.class));
     }
-
+/*  이전 로직에 대한 테스트이므로 주석처리
     @Test
     @DisplayName("가게 별 리뷰 조회 - 성공")
     @Order(2)
@@ -113,7 +113,7 @@ public class ReviewTest {
         List<ReviewResponse> responses = result.getContent();
         assertEquals("Great!", responses.get(0).getContents());
         assertEquals("Good!", responses.get(1).getContents());
-    }
+    }*/
 
 
     @Test

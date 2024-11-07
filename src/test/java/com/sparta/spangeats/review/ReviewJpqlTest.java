@@ -11,6 +11,7 @@ import org.springframework.data.domain.*;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,9 +34,9 @@ public class ReviewJpqlTest {
 
         List<Review> reviewList = List.of(
                 new Review(1L, 1L, 1L, "111"),
-                new Review(2L, 2L, 2L, "222"),
-                new Review(3L, 3L, 3L, "333"),
-                new Review(4L, 4L, 4L, "444")
+                new Review(1L, 2L, 2L, "222"),
+                new Review(1L, 3L, 3L, "333"),
+                new Review(1L, 4L, 4L, "444")
         );
 
         Page<Review> reviewPage = new PageImpl<>(reviewList, pageable, reviewList.size());
@@ -43,5 +44,21 @@ public class ReviewJpqlTest {
         when(reviewRepository.findAllForStore(pageable)).thenReturn(reviewPage);
 
         Page<Review> result = reviewRepository.findAllForStore(pageable);
+
+        assertEquals(reviewList.size(), result.getTotalElements()); // 총 리뷰 수 확인
+        assertEquals(4, result.getTotalElements()); // 기대한 리뷰 개수와 같은지 확인
+
+        // 각 리뷰가 올바르게 매핑되었는지 확인
+        List<Review> responses = result.getContent();
+        assertEquals("111", responses.get(0).getContents());
+        assertEquals("222", responses.get(1).getContents());
+        assertEquals("333", responses.get(2).getContents());
+
+        Long temp = 1L;
+        // 각 리뷰의 주문 ID가 예상과 일치하는지 확인
+        for (Review response : reviewPage) {
+            assertEquals(temp, response.getOrderId());
+            temp++;
+        }
     }
 }
