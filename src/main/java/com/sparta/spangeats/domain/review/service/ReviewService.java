@@ -70,7 +70,7 @@ public class ReviewService {
 
     public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new IllegalArgumentException("회원 정보를 찾을 수 없습니다. 다시 로그인 해주세요."));
+                new NullPointerException("회원 정보를 찾을 수 없습니다. 다시 로그인 해주세요."));
 
         Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         Sort sort = Sort.by(direction, sortBy);
