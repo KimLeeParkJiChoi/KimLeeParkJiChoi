@@ -6,13 +6,12 @@ import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.menu.exception.MenuNotFoundException;
 import com.sparta.spangeats.domain.menu.repository.MenuRepository;
-import com.sparta.spangeats.domain.order.dto.OrderResponse;
-import com.sparta.spangeats.domain.order.dto.OrderSaveRequest;
-import com.sparta.spangeats.domain.order.dto.OrderSaveResponse;
-import com.sparta.spangeats.domain.order.dto.OrderUpdateStatusRequest;
+import com.sparta.spangeats.domain.order.dto.*;
 import com.sparta.spangeats.domain.order.entity.MenuOrder;
 import com.sparta.spangeats.domain.order.entity.Order;
+import com.sparta.spangeats.domain.order.exception.OrderLowMinPriceException;
 import com.sparta.spangeats.domain.order.exception.OrderNotFoundException;
+import com.sparta.spangeats.domain.order.exception.OrderNotOpenTimeException;
 import com.sparta.spangeats.domain.order.repository.MenuOrderRepository;
 import com.sparta.spangeats.domain.order.repository.OrderRepository;
 import com.sparta.spangeats.domain.store.entity.Store;
@@ -22,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -41,6 +41,10 @@ public class OrderService {
                 .orElseThrow(() -> new StoreException("가게 정보가 없습니다."));
         Address address = addressRepository.findById(request.addressId())
                 .orElseThrow(() -> new IllegalArgumentException("주소 정보가 없습니다."));
+
+        checkMinOrderPrice(request.totalPrice(), store.getMinOrderPrice());
+        checkStoreOpenTimeAndCloseTime(store.getOpenTime(), store.getCloseTime());
+
         Order order = Order.builder()
                 .member(member)
                 .store(store)
@@ -53,22 +57,22 @@ public class OrderService {
                 .build();
         orderRepository.save(order);
 
-        List<MenuOrder> menuOrders = request.orders().stream()
-                .map(items -> {
-                    Menu menu = menuRepository.findById(items.menuId())
-                            .orElseThrow(() -> new MenuNotFoundException("해당 메뉴가 존재하지 않습니다."));
-                    MenuOrder menuOrder = MenuOrder.builder()
-                            .menu(menu)
-                            .order(order)
-                            .quantity(items.quantity())
-                            .build();
-                    menuOrderRepository.save(menuOrder);
-                    return menuOrder;
-                })
-                .toList();
+        createMenuOrders(request.orders(), order);
         return OrderSaveResponse.from(order);
     }
 
+    private void createMenuOrders(List<OrderMenusRequest> orders, Order order) {
+        orders.forEach(items -> {
+                Menu menu = menuRepository.findById(items.menuId())
+                        .orElseThrow(() -> new MenuNotFoundException("해당 메뉴가 존재하지 않습니다."));
+                MenuOrder menuOrder = MenuOrder.builder()
+                        .menu(menu)
+                        .order(order)
+                        .quantity(items.quantity())
+                        .build();
+                menuOrderRepository.save(menuOrder);
+        });
+    }
 
     public OrderResponse retrieveOne(Long orderId) {
         Order order = orderRepository.findById(orderId)
@@ -90,5 +94,18 @@ public class OrderService {
                 .orElseThrow(() -> new OrderNotFoundException("주문 내역을 찾을 수 없습니다."));
         order.updateStatus(request.status());
         orderRepository.save(order);
+    }
+
+    private void checkStoreOpenTimeAndCloseTime(LocalTime openTime, LocalTime closeTime) {
+        LocalTime now = LocalTime.now();
+        if (now.isBefore(openTime) || now.isAfter(closeTime)) {
+            throw new OrderNotOpenTimeException("영업중이 아닙니다.");
+        }
+    }
+
+    private void checkMinOrderPrice(Long totalPrice, Long minOrderPrice) {
+        if (totalPrice < minOrderPrice) {
+            throw new OrderLowMinPriceException("최소주문금액 이상 구매가 가능합니다.");
+        }
     }
 }

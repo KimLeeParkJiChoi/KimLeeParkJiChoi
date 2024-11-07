@@ -4,18 +4,20 @@ import com.sparta.spangeats.domain.address.exception.AddressOverCountException;
 import com.sparta.spangeats.domain.auth.exception.AuthException;
 import com.sparta.spangeats.domain.cart.exception.CartNotFoundException;
 import com.sparta.spangeats.domain.member.exception.MemberException;
+import com.sparta.spangeats.domain.order.exception.OrderLowMinPriceException;
+import com.sparta.spangeats.domain.order.exception.OrderNotOpenTimeException;
 import com.sparta.spangeats.domain.store.exception.StoreException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(StoreException.class)
@@ -57,4 +59,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+    @ExceptionHandler(OrderLowMinPriceException.class)
+    public ResponseEntity<ErrorResponseDto> handleOrderLowMinPriceException(OrderLowMinPriceException ex) {
+        ErrorResponseDto response = new ErrorResponseDto(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(OrderNotOpenTimeException.class)
+    public ResponseEntity<ErrorResponseDto> handleOrderNotOpenTimeException(OrderNotOpenTimeException ex) {
+        ErrorResponseDto response = new ErrorResponseDto(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }

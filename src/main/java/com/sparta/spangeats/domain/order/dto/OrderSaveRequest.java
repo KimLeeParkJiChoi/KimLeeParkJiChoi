@@ -2,7 +2,6 @@ package com.sparta.spangeats.domain.order.dto;
 
 import com.sparta.spangeats.domain.order.entity.DeliveryType;
 import com.sparta.spangeats.domain.order.entity.PaymentType;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public record OrderSaveRequest(
         String storeRequest,
         PaymentType paymentType,
         DeliveryType deliveryType,
-        List<MenuOrders> orders,
-        Integer totalPrice
+        List<OrderMenusRequest> orders,
+        Long totalPrice
 ) {
 }

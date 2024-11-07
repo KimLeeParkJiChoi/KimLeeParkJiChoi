@@ -21,7 +21,7 @@ public record OrderSaveResponse(
         DeliveryType deliveryType,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Integer totalPrice
+        Long totalPrice
 ) {
     public static OrderSaveResponse from(Order order) {
         return OrderSaveResponse.builder()
