@@ -75,4 +75,11 @@ public class OrderService {
 
         return OrderResponse.from(order);
     }
+
+    public List<OrderResponse> retrieveAll(Member member) {
+        List<Order> orders = orderRepository.findAllByMemberId(member.getId());
+        return orders.stream()
+                .map(OrderResponse::from)
+                .toList();
+    }
 }

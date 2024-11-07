@@ -39,4 +39,10 @@ public class OrderController {
         OrderResponse response = orderService.retrieveOne(orderId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/lists")
+    public ResponseEntity<List<OrderResponse>> retrieveOrders(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<OrderResponse> responses = orderService.retrieveAll(userDetails.getMember());
+        return ResponseEntity.status(HttpStatus.OK).body(responses);
+    }
 }
