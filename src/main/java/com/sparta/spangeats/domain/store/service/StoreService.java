@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -118,20 +120,29 @@ public class StoreService {
         store.closeStore();
         storeRepository.save(store);
     }
+
+    // 3개월후 스케줄러로 완전히 가게 삭제
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    public void deleteClosedStores() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Store> storesToDelete = storeRepository.findByStatusAndDeletedAtBefore(StoreStatus.CLOSED, now);
+
+        // 삭제할 가게들 처리 (실제 삭제)
+        storeRepository.deleteAll(storesToDelete);
+    }
+
+
     // 4. 가게 전체 조회 메소드 (페이징처리)
     public List<StoreSearchDto> getStoresByNameAsList(String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        // OPEN 상태의 가게를 페이징 처리하여 가져옴
-        Page<Store> storesPage = storeRepository.findAllByStatus(StoreStatus.OPEN, pageable);
+        // OPEN 상태와 이름 조건으로 필터링하면서 페이징 처리
+        Page<Store> storesPage = storeRepository.findAllByStatusAndNameContaining(StoreStatus.OPEN, name, pageable);
 
-        // 필터링과 매핑을 수행하여 List로 변환
-        List<StoreSearchDto> filteredStores = storesPage.stream()
-                .filter(store -> store.getName().contains(name))
+        // Page 객체를 DTO 리스트로 변환하여 반환
+        return storesPage.stream()
                 .map(StoreSearchDto::from)
                 .collect(Collectors.toList());
-
-        return filteredStores;
     }
 
     //5. 가게 단권 조회 메서드

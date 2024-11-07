@@ -1,10 +1,12 @@
 package com.sparta.spangeats.domain.store.dto;
 
+import com.sparta.spangeats.domain.menu.dto.response.MenuDto;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.store.entity.Store;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public record StoreIdSearchDto(
     String name,
@@ -14,7 +16,7 @@ public record StoreIdSearchDto(
     String phoneNumber,
     String address,
     String notice, // 공지 추가
-    List<Menu> menus
+    List<MenuDto> menus
 
 ){  public static StoreIdSearchDto from(Store store) {
     return new StoreIdSearchDto(
@@ -25,7 +27,9 @@ public record StoreIdSearchDto(
             store.getPhoneNumber(),
             store.getAddress(),
             store.getNotice(), // 공지 추가
-            store.getMenus() // 연관된 메뉴들
+            store.getMenus().stream()
+                    .map(MenuDto::from)
+                    .collect(Collectors.toList())// 연관된 메뉴들
     );
 }
 }

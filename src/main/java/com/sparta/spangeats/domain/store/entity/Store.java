@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,9 @@ public class Store extends Timestamped {
 
     @Column
     private String notice;
+
+    @Column(nullable = true)
+    private LocalDateTime deletedAt; // 삭제 예정일
 
     @OneToMany(mappedBy = "store") // Store와 Menu의 연관관계
     private List<Menu> menus = new ArrayList<>();
@@ -90,6 +94,7 @@ public class Store extends Timestamped {
     //폐업 상태 메서드
     public void closeStore() {
         this.status = StoreStatus.CLOSED;
+        this.deletedAt = LocalDateTime.now().plusMonths(3);  // 3개월 후 삭제 예정일 설정
     }
 
     public List<Menu> getMenus() {
