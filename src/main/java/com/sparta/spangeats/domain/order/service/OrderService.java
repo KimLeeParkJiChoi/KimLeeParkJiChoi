@@ -61,7 +61,7 @@ public class OrderService {
         return OrderSaveResponse.from(order);
     }
 
-    private void createMenuOrders(List<MenuOrders> orders, Order order) {
+    private void createMenuOrders(List<OrderMenusRequest> orders, Order order) {
         orders.forEach(items -> {
                 Menu menu = menuRepository.findById(items.menuId())
                         .orElseThrow(() -> new MenuNotFoundException("해당 메뉴가 존재하지 않습니다."));
