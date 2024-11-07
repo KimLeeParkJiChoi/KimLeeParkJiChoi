@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record OrderSaveResponse(
+        Long orderId,
         String storeName,
         String memberName,
         String address,
@@ -24,6 +25,7 @@ public record OrderSaveResponse(
 ) {
     public static OrderSaveResponse from(Order order) {
         return OrderSaveResponse.builder()
+                .orderId(order.getId())
                 .storeName(order.getStore().getName())
                 .memberName(order.getMember().getNickname())
                 .address(order.getAddress().getAddress())

@@ -5,7 +5,8 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
 public record ReviewRequest(
-        @NotBlank @Max(5) @Min(1) Long score,
+        @Max(5) @Min(1)
+        Long score,
         String contents
 ) {
 }
