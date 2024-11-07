@@ -14,5 +14,5 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
 
     long countByMemberIdAndStatus(Long memberId, StoreStatus status);
 
-    Page<Store> findAllByStatus(StoreStatus status, Pageable pageable);
+    Page<Store> findAllByStatusAndNameContaining(StoreStatus status, String name, Pageable pageable);
 }

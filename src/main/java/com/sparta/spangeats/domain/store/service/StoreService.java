@@ -122,16 +122,13 @@ public class StoreService {
     public List<StoreSearchDto> getStoresByNameAsList(String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        // OPEN 상태의 가게를 페이징 처리하여 가져옴
-        Page<Store> storesPage = storeRepository.findAllByStatus(StoreStatus.OPEN, pageable);
+        // OPEN 상태와 이름 조건으로 필터링하면서 페이징 처리
+        Page<Store> storesPage = storeRepository.findAllByStatusAndNameContaining(StoreStatus.OPEN, name, pageable);
 
-        // 필터링과 매핑을 수행하여 List로 변환
-        List<StoreSearchDto> filteredStores = storesPage.stream()
-                .filter(store -> store.getName().contains(name))
+        // Page 객체를 DTO 리스트로 변환하여 반환
+        return storesPage.stream()
                 .map(StoreSearchDto::from)
                 .collect(Collectors.toList());
-
-        return filteredStores;
     }
 
     //5. 가게 단권 조회 메서드
