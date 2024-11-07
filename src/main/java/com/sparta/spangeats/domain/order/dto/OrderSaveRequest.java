@@ -16,6 +16,7 @@ public record OrderSaveRequest(
         String storeRequest,
         PaymentType paymentType,
         DeliveryType deliveryType,
-        List<MenuOrders> orders
+        List<MenuOrders> orders,
+        Integer totalPrice
 ) {
 }

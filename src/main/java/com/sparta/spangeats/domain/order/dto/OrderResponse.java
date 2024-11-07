@@ -9,7 +9,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record OrderSaveResponse(
+public record OrderResponse(
         String storeName,
         String memberName,
         String address,
@@ -22,8 +22,8 @@ public record OrderSaveResponse(
         LocalDateTime updatedAt,
         Integer totalPrice
 ) {
-    public static OrderSaveResponse from(Order order) {
-        return OrderSaveResponse.builder()
+    public static OrderResponse from(Order order) {
+        return OrderResponse.builder()
                 .storeName(order.getStore().getName())
                 .memberName(order.getMember().getNickname())
                 .address(order.getAddress().getAddress())
