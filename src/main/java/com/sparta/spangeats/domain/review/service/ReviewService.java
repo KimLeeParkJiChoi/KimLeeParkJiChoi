@@ -42,9 +42,8 @@ public class ReviewService {
 
         Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
 
-        order.setReviewId(savedReview.getId());
-
         reviewRepository.save(savedReview);
+        order.setReviewId(savedReview.getId());
         return "리뷰가 생성되었습니다.";
     }
 
@@ -58,32 +57,15 @@ public class ReviewService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        List<Order> orderList = store.getOrders();
-        List<ReviewResponse> response = new ArrayList<>();
 
-/* JPQL 사용한 메서드. 무시하셔도 됩니다.
-
- Page<Review> reviews = reviewRepository.findAllForStore(pageable);
+        Page<Review> reviews = reviewRepository.findAllForStore(pageable);
         Page<ReviewResponse> responses = reviews.map(
-                review -> {return new ReviewResponse(review.getScore(), review.getContents(),
-                        review.getCreatedAt(), review.getUpdatedAt());}
-        );*/
+                review -> new ReviewResponse(review.getScore(), review.getContents(),
+                        review.getCreatedAt(), review.getUpdatedAt())
+        );
 
-        for (Order order : orderList) {
-            Long reviewId = order.getReviewId();
-            Review review = reviewRepository.findById(reviewId).orElseThrow(() ->
-                    new IllegalArgumentException("리뷰를 찾을 수 없습니다.")
-            );
 
-            response.add(ReviewResponse.create(review));
-        }
-
-        // List<ReviewResponse>를 Page<ReviewResponse>로 변환
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), response.size());
-        Page<ReviewResponse> pageResponse = new PageImpl<>(response.subList(start, end), pageable, response.size());
-
-        return pageResponse;
+        return responses;
     }
 
     public Page<ReviewResponse> getAllForMember(int page, int size, String sortBy, boolean isAsc, Long memberId) {
