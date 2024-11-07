@@ -5,12 +5,15 @@ import com.sparta.spangeats.domain.address.repository.AddressRepository;
 import com.sparta.spangeats.domain.member.entity.Member;
 import com.sparta.spangeats.domain.menu.entity.Menu;
 import com.sparta.spangeats.domain.menu.exception.MenuNotFoundException;
+import com.sparta.spangeats.domain.menu.exception.StoreNotFoundException;
 import com.sparta.spangeats.domain.menu.repository.MenuRepository;
 import com.sparta.spangeats.domain.order.dto.OrderResponse;
 import com.sparta.spangeats.domain.order.dto.OrderSaveRequest;
 import com.sparta.spangeats.domain.order.dto.OrderSaveResponse;
+import com.sparta.spangeats.domain.order.dto.OrderUpdateStatusRequest;
 import com.sparta.spangeats.domain.order.entity.MenuOrder;
 import com.sparta.spangeats.domain.order.entity.Order;
+import com.sparta.spangeats.domain.order.entity.OrderStatus;
 import com.sparta.spangeats.domain.order.exception.OrderNotFoundException;
 import com.sparta.spangeats.domain.order.repository.MenuOrderRepository;
 import com.sparta.spangeats.domain.order.repository.OrderRepository;
@@ -82,4 +85,23 @@ public class OrderService {
                 .map(OrderResponse::from)
                 .toList();
     }
+
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderUpdateStatusRequest request, Member member) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("주문 내역을 찾을 수 없습니다."));
+        order.updateStatus(request.status());
+        orderRepository.save(order);
+    }
+
+/*    public OrderResponse retrieveOneByOwner(Long storeId, Long orderId, Member member) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreNotFoundException(storeId));
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("해당 주문을 찾을 수 없습니다."));
+        if (order.isOwner(member.getMemberRole())) {
+            throw new IllegalArgumentException("order의 사장님이 아닙니다.");
+        }
+        return
+    }*/
 }

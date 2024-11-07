@@ -3,6 +3,7 @@ package com.sparta.spangeats.domain.order.controller;
 import com.sparta.spangeats.domain.order.dto.OrderResponse;
 import com.sparta.spangeats.domain.order.dto.OrderSaveRequest;
 import com.sparta.spangeats.domain.order.dto.OrderSaveResponse;
+import com.sparta.spangeats.domain.order.dto.OrderUpdateStatusRequest;
 import com.sparta.spangeats.domain.order.service.OrderService;
 import com.sparta.spangeats.security.filter.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -45,4 +46,23 @@ public class OrderController {
         List<OrderResponse> responses = orderService.retrieveAll(userDetails.getMember());
         return ResponseEntity.status(HttpStatus.OK).body(responses);
     }
+
+    @PatchMapping("/{orderId}")
+    public ResponseEntity<String> updateStatusOrder(
+            @PathVariable Long orderId,
+            @Valid @RequestBody OrderUpdateStatusRequest request,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        orderService.updateOrderStatus(orderId, request, userDetails.getMember());
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+/*    @GetMapping("/{storeId}/{orderId}")
+    public ResponseEntity<OrderResponse> retrieveOneOrderByOwner(
+            @PathVariable Long storeId,
+            @PathVariable Long orderId,
+            @AuthenticationPrincipal UserDetailsImpl userDetails
+    ) {
+        OrderResponse response = orderService.retrieveOneByOwner(storeId, orderId, userDetails.getMember());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }*/
 }

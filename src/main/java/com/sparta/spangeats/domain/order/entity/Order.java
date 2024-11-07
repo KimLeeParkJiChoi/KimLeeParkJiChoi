@@ -3,6 +3,7 @@ package com.sparta.spangeats.domain.order.entity;
 import com.sparta.spangeats.common.Timestamped;
 import com.sparta.spangeats.domain.address.entity.Address;
 import com.sparta.spangeats.domain.member.entity.Member;
+import com.sparta.spangeats.domain.member.enums.MemberRole;
 import com.sparta.spangeats.domain.store.entity.Store;
 import jakarta.persistence.*;
 
@@ -74,5 +75,13 @@ public class Order extends Timestamped {
 
     public Order(Long reviewId) {
         this.reviewId = reviewId;
+    }
+
+    public boolean isOwner(MemberRole memberRole) {
+        return this.member.getMemberRole().equals(memberRole);
+    }
+
+    public void updateStatus(OrderStatus status) {
+        this.status = status;
     }
 }
