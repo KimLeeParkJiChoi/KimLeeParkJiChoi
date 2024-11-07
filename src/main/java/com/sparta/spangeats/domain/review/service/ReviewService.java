@@ -42,9 +42,8 @@ public class ReviewService {
 
         Review savedReview = new Review(memberId, orderId, requestDto.score(), requestDto.contents());
 
-        order.setReviewId(savedReview.getId());
-
         reviewRepository.save(savedReview);
+        order.setReviewId(savedReview.getId());
         return "리뷰가 생성되었습니다.";
     }
 
@@ -60,14 +59,6 @@ public class ReviewService {
 
         List<Order> orderList = store.getOrders();
         List<ReviewResponse> response = new ArrayList<>();
-
-/* JPQL 사용한 메서드. 무시하셔도 됩니다.
-
- Page<Review> reviews = reviewRepository.findAllForStore(pageable);
-        Page<ReviewResponse> responses = reviews.map(
-                review -> {return new ReviewResponse(review.getScore(), review.getContents(),
-                        review.getCreatedAt(), review.getUpdatedAt());}
-        );*/
 
         for (Order order : orderList) {
             Long reviewId = order.getReviewId();

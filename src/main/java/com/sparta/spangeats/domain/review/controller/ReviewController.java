@@ -19,9 +19,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
 
-    @PostMapping("")
+    @PostMapping("{orderId}")
     public ResponseEntity<String> saveReview(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                             @RequestParam Long orderId,
+                                             @PathVariable Long orderId,
                                              @Valid @RequestBody ReviewRequest requestDto) {
         Long memberId = userDetails.getMemberId();
         String message = reviewService.saveReview(memberId, orderId, requestDto);
@@ -32,7 +32,7 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewResponse>> getALlForStore(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortBy", defaultValue = "modifiedAt") String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "updatedAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
             @PathVariable Long storeId) {
         return  ResponseEntity.ok(reviewService.getALlForStore(page, size, sortBy, isAsc, storeId));
@@ -42,7 +42,7 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewResponse>> getAllForMember(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sortBy", defaultValue = "modifiedAt") String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "updatedAt") String sortBy,
             @RequestParam(value = "isAsc", defaultValue = "false") boolean isAsc,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         Long memberId = userDetails.getMemberId();
