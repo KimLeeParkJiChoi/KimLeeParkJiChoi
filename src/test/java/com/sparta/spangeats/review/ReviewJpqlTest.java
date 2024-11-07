@@ -4,17 +4,16 @@ import com.sparta.spangeats.domain.review.entity.Review;
 import com.sparta.spangeats.domain.review.repository.ReviewRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-//@DataJpaTest
-//@ActiveProfiles("test") // 테스트용 프로파일을 사용하도록 지정
+@ExtendWith(MockitoExtension.class)
 public class ReviewJpqlTest {
 
     @Mock
@@ -37,7 +36,7 @@ public class ReviewJpqlTest {
                 new Review(2L, 2L, 2L, "222"),
                 new Review(3L, 3L, 3L, "333"),
                 new Review(4L, 4L, 4L, "444")
-                );
+        );
 
         Page<Review> reviewPage = new PageImpl<>(reviewList, pageable, reviewList.size());
 
