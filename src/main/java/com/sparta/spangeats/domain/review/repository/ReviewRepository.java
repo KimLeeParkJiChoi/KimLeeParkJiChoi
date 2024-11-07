@@ -22,16 +22,3 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             + " order by r.updatedAt")
     Page<Review> findAllForStore(Pageable pageable);
 }
-
-/* sql 로 데이터를 임의로 집어넣어서 포스트맨으로 테스트 가능
-
-select
-from store s, order o, review r
-where s.id = o.store_id
-    and o.review_id = r.id
-
-@Query(value = "SELECT u FROM User u ORDER BY id")
-Page<User> findAllUsersWithPagination(Pageable pageable);
-
-
-*/
