@@ -20,7 +20,7 @@ public record OrderResponse(
         DeliveryType deliveryType,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Integer totalPrice
+        Long totalPrice
 ) {
     public static OrderResponse from(Order order) {
         return OrderResponse.builder()

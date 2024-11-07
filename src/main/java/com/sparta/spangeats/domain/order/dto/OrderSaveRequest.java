@@ -17,6 +17,6 @@ public record OrderSaveRequest(
         PaymentType paymentType,
         DeliveryType deliveryType,
         List<MenuOrders> orders,
-        Integer totalPrice
+        Long totalPrice
 ) {
 }
